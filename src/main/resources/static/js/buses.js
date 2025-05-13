@@ -265,12 +265,13 @@ function selectSeat(seatElement) {
 }
 
 // Update selected seats input field
+// Update the updateSelectedSeats function to handle dynamic pricing
 function updateSelectedSeats() {
     const busCard = document.querySelector('.bus-card.expanded');
     if (!busCard) return;
 
     const selectedSeats = Array.from(busCard.querySelectorAll('.seat.selected'))
-    .map(seat => seat.dataset.seat); 
+        .map(seat => seat.dataset.seat);
 
     const seatInput = busCard.querySelector('#seat-numbers');
     const totalAmountDisplay = busCard.querySelector('#total-amount-display');
@@ -282,14 +283,32 @@ function updateSelectedSeats() {
 
     // Get the correct fare (accounting for discounts)
     let fareElement = busCard.querySelector('.discounted-fare span');
-    if (!fareElement) {
-        fareElement = busCard.querySelector('.original-fare');
+    let fare;
+
+    if (fareElement) {
+        // Use discounted fare if available
+        fare = parseFloat(fareElement.textContent.trim());
+    } else {
+        // Fall back to original fare
+        const originalFareText = busCard.querySelector('.original-fare').textContent;
+        fare = parseFloat(originalFareText.replace('Rs. ', '').trim());
     }
 
-    const fareText = fareElement.textContent;
-    const fare = parseFloat(fareText.replace('Rs. ', '').trim());
     const totalAmount = selectedSeats.length * fare;
 
     totalAmountDisplay.value = 'Rs. ' + totalAmount.toFixed(2);
     totalAmountHidden.value = totalAmount.toFixed(2);
 }
+
+// Add event listener for boarding point changes
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.booking-form select[name="boardingPoint"]').forEach(select => {
+        select.addEventListener('change', function() {
+            const form = this.closest('form');
+            const hiddenInput = form.querySelector('#boardingPoint-hidden');
+            if (hiddenInput) {
+                hiddenInput.value = this.value;
+            }
+        });
+    });
+});

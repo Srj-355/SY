@@ -835,16 +835,20 @@
                             </p>
                         </div>
                         <div class="col-md-2">
-                            <p class="mb-1"><i class="bi bi-tag"></i>
-                                <!-- Show original fare (strikethrough if discounted) -->
-                                <span th:text="'Rs. ' + ${bus.fare}"
-                                      th:classappend="${adjustedFares.get(bus.id)} < ${bus.fare} ? 'strikethrough' : ''">
-        </span>
-                                <!-- Show discounted fare if applicable -->
-                                <small th:if="${adjustedFares.get(bus.id)} < ${bus.fare}"
-                                       class="text-success">
-                                    (Discounted: Rs. <span th:text="${adjustedFares.get(bus.id)}"></span>)
-                                </small>
+                            <p class="mb-1">
+                                <i class="fas fa-tag"></i>
+                                <span th:text="'Rs. ' + ${#numbers.formatDecimal(bus.fare, 1, 2)}"
+                                      th:classappend="${adjustedFares?.get(bus.id) != null} and
+                         ${adjustedFares.get(bus.id) != bus.fare} ?
+                         'original-fare strikethrough' : 'original-fare'">
+    </span>
+                                <span th:if="${adjustedFares?.get(bus.id) != null} and
+                 ${adjustedFares.get(bus.id) != bus.fare}"
+                                      class="discounted-fare">
+        Rs. <span th:text="${#numbers.formatDecimal(adjustedFares.get(bus.id), 1, 2)}"></span>
+        <small th:if="${adjustedFares.get(bus.id) > bus.fare}" class="text-danger">(Premium)</small>
+        <small th:if="${adjustedFares.get(bus.id) < bus.fare}" class="text-success">(Discount)</small>
+    </span>
                             </p>
                         </div>
                         <div class="col-md-2 text-end">
@@ -908,19 +912,35 @@
                                         <input type="text" class="form-control" id="seat-numbers" readonly>
                                     </div>
                                     <div class="col-md-2 fare-display-container">
+<!--                                        <p class="mb-1">-->
+<!--                                            <i class="fas fa-tag"></i>-->
+<!--                                            &lt;!&ndash; Original Fare &ndash;&gt;-->
+<!--                                            <span th:text="'Rs. ' + ${#numbers.formatDecimal(bus.fare, 1, 2)}"-->
+<!--                                                  th:classappend="${adjustedFares?.get(bus.id) != null} and-->
+<!--                             ${adjustedFares.get(bus.id) < bus.fare} ?-->
+<!--                             'original-fare strikethrough' : 'original-fare'">-->
+<!--        </span>-->
+<!--                                            <span th:if="${adjustedFares?.get(bus.id) != null} and-->
+<!--                     ${adjustedFares.get(bus.id) < bus.fare}"-->
+<!--                                                  class="discounted-fare">-->
+<!--            Rs. <span th:text="${#numbers.formatDecimal(adjustedFares.get(bus.id), 1, 2)}"></span>-->
+<!--        </span>-->
+<!--                                        </p>-->
+
                                         <p class="mb-1">
                                             <i class="fas fa-tag"></i>
-                                            <!-- Original Fare -->
                                             <span th:text="'Rs. ' + ${#numbers.formatDecimal(bus.fare, 1, 2)}"
                                                   th:classappend="${adjustedFares?.get(bus.id) != null} and
-                             ${adjustedFares.get(bus.id) < bus.fare} ?
-                             'original-fare strikethrough' : 'original-fare'">
-        </span>
+                         ${adjustedFares.get(bus.id) != bus.fare} ?
+                         'original-fare strikethrough' : 'original-fare'">
+    </span>
                                             <span th:if="${adjustedFares?.get(bus.id) != null} and
-                     ${adjustedFares.get(bus.id) < bus.fare}"
+                 ${adjustedFares.get(bus.id) != bus.fare}"
                                                   class="discounted-fare">
-            Rs. <span th:text="${#numbers.formatDecimal(adjustedFares.get(bus.id), 1, 2)}"></span>
-        </span>
+        Rs. <span th:text="${#numbers.formatDecimal(adjustedFares.get(bus.id), 1, 2)}"></span>
+        <small th:if="${adjustedFares.get(bus.id) > bus.fare}" class="text-danger">(Premium)</small>
+        <small th:if="${adjustedFares.get(bus.id) < bus.fare}" class="text-success">(Discount)</small>
+    </span>
                                         </p>
                                     </div>
                                     <div class="mb-3">

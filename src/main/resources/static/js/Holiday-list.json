@@ -5,22 +5,26 @@
       {
         "event": "Nepali New Year/Mesh Sankranti/Biska Jatra",
         "bsDate": "1 Baishakh 2082",
-        "adDate": "2025-04-14"
+        "adDate": "2025-04-14",
+        "multiplier": "1.3"
       },
       {
         "event": "International Labour Day/Bungadyo : Rato Matsyandranath Rath Yatra Prambha",
         "bsDate": "18 Baishakh 2082",
-        "adDate": "2025-05-01"
+        "adDate": "2025-05-01",
+        "multiplier": "1.2"
       },
       {
         "event": "Provincial Government Official Language Day/Kirat Samaj Sudhar Diwas",
         "bsDate": "24 Baishakh 2082",
-        "adDate": "2025-05-07"
+        "adDate": "2025-05-07",
+        "multiplier": "1.1"
       },
       {
         "event": "Buddha Jayanti/Ubhauli Parwa/Chandeshwari Jatra/Chandi Poornima",
         "bsDate": "29 Baishakh 2082",
-        "adDate": "2025-05-12"
+        "adDate": "2025-05-12",
+        "multiplier": "1.3"
       }
     ]
   },
@@ -30,7 +34,8 @@
       {
         "event": "Gantantra Diwas",
         "bsDate": "15 Jestha 2082",
-        "adDate": "2025-05-29"
+        "adDate": "2025-05-29",
+        "multiplier": "1.2"
       }
     ]
   },
@@ -40,17 +45,20 @@
       {
         "event": "Janai Poornima/Rakshya Bandhan/Kwati Khane Din",
         "bsDate": "24 Shrawan 2082",
-        "adDate": "2025-08-09"
+        "adDate": "2025-08-09",
+        "multiplier": "1.3"
       },
       {
         "event": "Gaijatra/International Day of the World's Indigenous Peoples",
         "bsDate": "25 Shrawan 2082",
-        "adDate": "2025-08-10"
+        "adDate": "2025-08-10",
+        "multiplier": "1.1"
       },
       {
         "event": "Shree Krishna Janmashtami/Gorakhkali Puja",
         "bsDate": "31 Shrawan 2082",
-        "adDate": "2025-08-16"
+        "adDate": "2025-08-16",
+        "multiplier": "1.3"
       }
     ]
   },
@@ -60,22 +68,26 @@
       {
         "event": "Haritalika Teej",
         "bsDate": "10 Bhadra 2082",
-        "adDate": "2025-08-26"
+        "adDate": "2025-08-26",
+        "multiplier": "1.2"
       },
       {
         "event": "Radha Janmotsav/Gaura Parva",
         "bsDate": "15 Bhadra 2082",
-        "adDate": "2025-08-31"
+        "adDate": "2025-08-31",
+        "multiplier": "1.1"
       },
       {
         "event": "Indra Jaatra/Ananta Chaturdashi Vrata",
         "bsDate": "21 Bhadra 2082",
-        "adDate": "2025-09-06"
+        "adDate": "2025-09-06",
+        "multiplier": "1.3"
       },
       {
         "event": "Nawami Shraddha/Jitiya Parva",
         "bsDate": "30 Bhadra 2082",
-        "adDate": "2025-09-15"
+        "adDate": "2025-09-15",
+        "multiplier": "1.2"
       }
     ]
   },
@@ -85,32 +97,38 @@
       {
         "event": "Trayodashi Shraddha/Magha Shraddha/Sambidhan Diwas",
         "bsDate": "3 Ashwin 2082",
-        "adDate": "2025-09-19"
+        "adDate": "2025-09-19",
+        "multiplier": "1.1"
       },
       {
         "event": "Fulpati/World Heart Day",
         "bsDate": "13 Ashwin 2082",
-        "adDate": "2025-09-29"
+        "adDate": "2025-09-29",
+        "multiplier": "1.3"
       },
       {
         "event": "Maha Ashtami Vrata/Kairatri/Gorakhkali Puja",
         "bsDate": "14 Ashwin 2082",
-        "adDate": "2025-09-30"
+        "adDate": "2025-09-30",
+        "multiplier": "1.3"
       },
       {
         "event": "Maha Nawami Vrata/International Day of Older Persons",
         "bsDate": "15 Ashwin 2082",
-        "adDate": "2025-10-01"
+        "adDate": "2025-10-01",
+        "multiplier": "1.3"
       },
       {
         "event": "Bijaya Dashami/Devi Bisharjan/World Non Violence Day",
         "bsDate": "16 Ashwin 2082",
-        "adDate": "2025-10-02"
+        "adDate": "2025-10-02",
+        "multiplier": "1.3"
       },
       {
         "event": "Dashain Holiday/Shani Pradesh Vrata/World Animal Day",
         "bsDate": "18 Ashwin 2082",
-        "adDate": "2025-10-04"
+        "adDate": "2025-10-04",
+        "multiplier": "1.2"
       }
     ]
   },
@@ -120,22 +138,26 @@
       {
         "event": "Laxmi Pooja/Laxmi Prasad Devkota Jamna Jayanti/Kukur Tihar",
         "bsDate": "3 Kartik 2082",
-        "adDate": "2025-10-20"
+        "adDate": "2025-10-20",
+        "multiplier": "1.3"
       },
       {
         "event": "Tihar Holiday",
         "bsDate": "4 Kartik 2082",
-        "adDate": "2025-10-21"
+        "adDate": "2025-10-21",
+        "multiplier": "1.2"
       },
       {
         "event": "Bhai Tika/Kija Pooja",
         "bsDate": "6 Kartik 2082",
-        "adDate": "2025-10-23"
+        "adDate": "2025-10-23",
+        "multiplier": "1.3"
       },
       {
         "event": "Chhath Parva",
         "bsDate": "10 Kartik 2082",
-        "adDate": "2025-10-27"
+        "adDate": "2025-10-27",
+        "multiplier": "1.3"
       }
     ]
   },
@@ -145,12 +167,14 @@
       {
         "event": "International Day of Disabled Persons",
         "bsDate": "17 Mangsir 2082",
-        "adDate": "2025-12-03"
+        "adDate": "2025-12-03",
+        "multiplier": "1.1"
       },
       {
         "event": "Poornima Vrata/Dhanya Poornima/Yomari Punhi",
         "bsDate": "18 Mangsir 2082",
-        "adDate": "2025-12-04"
+        "adDate": "2025-12-04",
+        "multiplier": "1.2"
       }
     ]
   },
@@ -160,12 +184,14 @@
       {
         "event": "Christmas",
         "bsDate": "10 Paush 2082",
-        "adDate": "2025-12-25"
+        "adDate": "2025-12-25",
+        "multiplier": "1.3"
       },
       {
         "event": "Prithivi Jayanti/Rashtriya Ekata Diwas",
         "bsDate": "27 Paush 2082",
-        "adDate": "2026-01-11"
+        "adDate": "2026-01-11",
+        "multiplier": "1.2"
       }
     ]
   },
@@ -175,12 +201,14 @@
       {
         "event": "Makar Sankranti/Ghiu chaku khane Din",
         "bsDate": "1 Magh 2082",
-        "adDate": "2026-01-15"
+        "adDate": "2026-01-15",
+        "multiplier": "1.3"
       },
       {
         "event": "Basanta Panchami vrata/Saraswati Pooja",
         "bsDate": "9 Magh 2082",
-        "adDate": "2026-01-23"
+        "adDate": "2026-01-23",
+        "multiplier": "1.2"
       }
     ]
   },
@@ -190,17 +218,20 @@
       {
         "event": "Maha-Shivaratri/Army Day",
         "bsDate": "3 Falgun 2082",
-        "adDate": "2026-02-15"
+        "adDate": "2026-02-15",
+        "multiplier": "1.3"
       },
       {
         "event": "Prajatantra Diwas/Election Day",
         "bsDate": "7 Falgun 2082",
-        "adDate": "2026-02-19"
+        "adDate": "2026-02-19",
+        "multiplier": "1.2"
       },
       {
         "event": "Fagu Poornima/Holi",
         "bsDate": "18 Falgun 2082",
-        "adDate": "2026-03-02"
+        "adDate": "2026-03-02",
+        "multiplier": "1.3"
       }
     ]
   },
@@ -210,12 +241,14 @@
       {
         "event": "Ghode Jaatra",
         "bsDate": "4 Chaitra 2082",
-        "adDate": "2026-03-18"
+        "adDate": "2026-03-18",
+        "multiplier": "1.2"
       },
       {
         "event": "Shree Ram Nawami Vrata/World Theater Day",
         "bsDate": "13 Chaitra 2082",
-        "adDate": "2026-03-27"
+        "adDate": "2026-03-27",
+        "multiplier": "1.3"
       }
     ]
   }

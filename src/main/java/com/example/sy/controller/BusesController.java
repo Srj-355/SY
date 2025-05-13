@@ -113,7 +113,66 @@ public class BusesController {
 //         return "buses";
 //     }
 
-@GetMapping("/buses")
+//@GetMapping("/buses")
+//    public String showBuses(
+//            @RequestParam String departure,
+//            @RequestParam String destination,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+//            Model model) {
+//
+//        String formattedDeparture = departure.substring(0, 1).toUpperCase() + departure.substring(1);
+//        String formattedDestination = destination.substring(0, 1).toUpperCase() + destination.substring(1);
+//
+//        List<Bus> buses = busService.findByRouteAndIsActive(departure.toLowerCase(), destination.toLowerCase(), true);
+//
+//        buses = buses.stream()
+//            .filter(bus -> {
+//                try {
+//                    LocalTime departureTime = LocalTime.parse(bus.getDepartureTime(), TIME_FORMATTER);
+//                    LocalDateTime departureDateTime = LocalDateTime.of(date, departureTime);
+//                    return departureDateTime.isAfter(LocalDateTime.now().plusMinutes(MIN_MINUTES_BEFORE_DEPARTURE));
+//                } catch (Exception e) {
+//                    return false;
+//                }
+//            })
+//            .filter(bus -> {
+//                List<Booking> bookings = bookingService.findConfirmedBookingsByBusAndDate(bus, date.toString());
+//                int bookedSeats = bookings.stream()
+//                    .mapToInt(b -> b.getSeats().split(",").length)
+//                    .sum();
+//                return bookedSeats < TOTAL_SEATS;
+//            })
+//            .collect(Collectors.toList());
+//
+//        // Apply dynamic pricing
+//        Map<Long, Double> adjustedFares = new HashMap<>();
+//
+//
+//        DynamicPricing pricing = new DynamicPricing(HOLIDAY_FILE_PATH, 0);
+//        Map<Long, List<String>> bookedSeatsMap = new HashMap<>();
+//        for (Bus bus : buses) {
+//            pricing.setBaseFare(bus.getFare());
+//            adjustedFares.put(bus.getId(), pricing.getFare(date.toString()));
+//
+//            List<Booking> bookings = bookingService.findConfirmedBookingsByBusAndDate(bus, date.toString());
+//            List<String> bookedSeats = bookings.stream()
+//                .flatMap(b -> Arrays.stream(b.getSeats().split(",")))
+//                .collect(Collectors.toList());
+//            bookedSeatsMap.put(bus.getId(), bookedSeats);
+//        }
+//
+//        model.addAttribute("buses", buses);
+//        model.addAttribute("adjustedFares", adjustedFares);
+//        model.addAttribute("bookedSeats", bookedSeatsMap);
+//        model.addAttribute("departure", formattedDeparture);
+//        model.addAttribute("destination", formattedDestination);
+//        model.addAttribute("date", date);
+//        model.addAttribute("cities", cities);
+//
+//        return "buses";
+//    }
+
+    @GetMapping("/buses")
     public String showBuses(
             @RequestParam String departure,
             @RequestParam String destination,
@@ -124,41 +183,49 @@ public class BusesController {
         String formattedDestination = destination.substring(0, 1).toUpperCase() + destination.substring(1);
 
         List<Bus> buses = busService.findByRouteAndIsActive(departure.toLowerCase(), destination.toLowerCase(), true);
-        
+
         buses = buses.stream()
-            .filter(bus -> {
-                try {
-                    LocalTime departureTime = LocalTime.parse(bus.getDepartureTime(), TIME_FORMATTER);
-                    LocalDateTime departureDateTime = LocalDateTime.of(date, departureTime);
-                    return departureDateTime.isAfter(LocalDateTime.now().plusMinutes(MIN_MINUTES_BEFORE_DEPARTURE));
-                } catch (Exception e) {
-                    return false;
-                }
-            })
-            .filter(bus -> {
-                List<Booking> bookings = bookingService.findConfirmedBookingsByBusAndDate(bus, date.toString());
-                int bookedSeats = bookings.stream()
-                    .mapToInt(b -> b.getSeats().split(",").length)
-                    .sum();
-                return bookedSeats < TOTAL_SEATS;
-            })
-            .collect(Collectors.toList());
+                .filter(bus -> {
+                    try {
+                        LocalTime departureTime = LocalTime.parse(bus.getDepartureTime(), TIME_FORMATTER);
+                        LocalDateTime departureDateTime = LocalDateTime.of(date, departureTime);
+                        return departureDateTime.isAfter(LocalDateTime.now().plusMinutes(MIN_MINUTES_BEFORE_DEPARTURE));
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .filter(bus -> {
+                    List<Booking> bookings = bookingService.findConfirmedBookingsByBusAndDate(bus, date.toString());
+                    int bookedSeats = bookings.stream()
+                            .mapToInt(b -> b.getSeats().split(",").length)
+                            .sum();
+                    return bookedSeats < TOTAL_SEATS;
+                })
+                .collect(Collectors.toList());
 
-        // Apply dynamic pricing
+        // Apply enhanced dynamic pricing
         Map<Long, Double> adjustedFares = new HashMap<>();
-       
-
-        DynamicPricing pricing = new DynamicPricing(HOLIDAY_FILE_PATH, 0);
         Map<Long, List<String>> bookedSeatsMap = new HashMap<>();
+        DynamicPricing pricing = new DynamicPricing(HOLIDAY_FILE_PATH, TOTAL_SEATS);
+
         for (Bus bus : buses) {
             pricing.setBaseFare(bus.getFare());
+
+            // Get booked seats count for this bus
+            List<Booking> bookings = bookingService.    findConfirmedBookingsByBusAndDate(bus, date.toString());
+            int bookedSeats = bookings.stream()
+                    .mapToInt(b -> b.getSeats().split(",").length)
+                    .sum();
+            pricing.setBookedSeats(bookedSeats);
+
+            // Calculate dynamic price
             adjustedFares.put(bus.getId(), pricing.getFare(date.toString()));
-            
-            List<Booking> bookings = bookingService.findConfirmedBookingsByBusAndDate(bus, date.toString());
-            List<String> bookedSeats = bookings.stream()
-                .flatMap(b -> Arrays.stream(b.getSeats().split(",")))
-                .collect(Collectors.toList());
-            bookedSeatsMap.put(bus.getId(), bookedSeats);
+
+            // Track booked seats for seat selection
+            List<String> bookedSeatNumbers = bookings.stream()
+                    .flatMap(b -> Arrays.stream(b.getSeats().split(",")))
+                    .collect(Collectors.toList());
+            bookedSeatsMap.put(bus.getId(), bookedSeatNumbers);
         }
 
         model.addAttribute("buses", buses);
