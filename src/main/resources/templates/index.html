@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SajiloYatra - Bus Tickets</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Animate.css for smooth animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #42a5f5;
+            --primary-hover: #2980b9;
+            --secondary-color: #4CAF50;
+            --secondary-hover: #45a049;
+            --light-bg: #e8f5ff;
+            --dark-color: #2c3e50;
+            --animation-duration: 3s;
+            --easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Enhanced Navbar */
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white !important;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            color: var(--dark-color) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            padding: 8px 12px !important;
+            margin: 0 5px;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all var(--animation-duration) var(--easing);
+            will-change: transform, opacity;
+        }
+
+        [data-animate].animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Hero Section with Slider */
+        .hero-slider {
+            height: 60vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 1;
+        }
+        
+        .hero-slide.active {
+            opacity: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        /* Search Card with Floating Effect */
+        .search-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(50px);
+            transition: all 0.3s ease;
+            border: none;
+            animation: fadeInUp 0.6s var(--easing) forwards;
+        }
+        
+        .search-card:hover {
+            transform: translateY(45px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .form-control:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.25);
+        }
+        /* Popular Routes Section */
+        .route-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .route-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .route-card:hover img {
+            transform: scale(1.05);
+            transition: transform 0.3s var(--easing);
+        }
+        
+        .route-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--secondary-color);
+        }
+        
+        /* Testimonials */
+        .testimonial-card {
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .testimonial-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+        }
+        
+        /* Newsletter */
+        .newsletter {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+        }
+        
+        .footer-link {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: white;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--primary-color);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .hero-slider {
+                height: 50vh;
+            }
+
+            .search-card {
+                transform: translateY(20px);
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            /* Back to Top button mobile styles */
+            .back-to-top {
+                width: 40px;
+                height: 40px;
+                bottom: 30px;
+                right: 15px;
+                font-size: 0.9rem;
+            }
+
+            /* Make it always visible on mobile */
+            .back-to-top {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Adjust for reduced motion preference */
+            @media (prefers-reduced-motion: reduce) {
+                .back-to-top {
+                    transition: none;
+                }
+            }
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+            [data-animate] {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-bus-front me-2"></i>SajiloYatra
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/index}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/faq}">FAQs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/contact}">Contact us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/about}">About us</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.user == null}">
+                        <a class="nav-link" th:href="@{/auth}">Login</a>
+                    </li>
+                    <li class="nav-item dropdown" th:if="${session.user != null}">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i> Account
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:href="@{/my-bookings}">My Bookings</a></li>
+                            <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/auth/logout}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="scroll-progress" style="width: 0%;"></div>
+
+    <!-- Hero Slider -->
+    <section class="hero-slider">
+        <div class="hero-slide active" style="background-image: url('images/slider-bus-1.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('images/slider-bus-2.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('images/slider-bus-3.jpg');"></div>
+        
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-lg-8 mx-auto text-center hero-content animate__animated animate__fadeIn">
+                    <h1 class="display-4 fw-bold mb-4">Book Your Bus Tickets Easily</h1>
+                    <p class="lead mb-5">Travel to your favorite destinations with comfort and convenience.</p>
+                    <a href="#search-section" class="btn btn-primary btn-lg px-4 py-2 animate__animated animate__pulse animate__infinite">
+                        Book Now <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Form Section -->
+    <section id="search-section" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="search-card p-4 animate__animated animate__fadeInUp">
+                        <h2 class="h4 text-center mb-4">Find Your Perfect Trip</h2>
+                        <form th:action="@{/search}" method="post">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="departure" class="form-label">Departure</label>
+                                    <select id="departure" name="departure" class="form-select" required>
+                                        <option value="" disabled selected>Where are you?</option>
+                                        <option value="kathmandu">Kathmandu</option>
+                                        <option value="pokhara">Pokhara</option>
+                                        <option value="biratnagar">Biratnagar</option>
+                                        <!-- Add other options as needed -->
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="destination" class="form-label">Destination</label>
+                                    <select id="destination" name="destination" class="form-select" required>
+                                        <option value="" disabled selected>Where to?</option>
+                                        <option value="kathmandu">Kathmandu</option>
+                                        <option value="pokhara">Pokhara</option>
+                                        <option value="biratnagar">Biratnagar</option>
+                                        <!-- Add other options as needed -->
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="date" class="form-label">Travel Date</label>
+                                    <input type="date" id="date" name="date" class="form-control" required>
+                                </div>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100 py-2">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Routes Section -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Popular Routes</h2>
+                <p class="text-muted">Most frequently booked journeys by our customers</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="route-card card h-100" data-animate>
+                        <img src="images/route-kathmandu-pokhara.jpg" class="card-img-top" alt="Kathmandu to Pokhara">
+                        <span class="route-badge badge">25% OFF</span>
+                        <div class="card-body">
+                            <h5 class="card-title">Kathmandu → Pokhara</h5>
+                            <p class="card-text text-muted">From Rs. 1200</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="bi bi-clock"></i> 6-7 hrs</small>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="route-card card h-100" data-animate>
+                        <img src="images/route-pokhara-lumbini.jpg" class="card-img-top" alt="Pokhara to Lumbini">
+                        <div class="card-body">
+                            <h5 class="card-title">Pokhara → Lumbini</h5>
+                            <p class="card-text text-muted">From Rs. 1500</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="bi bi-clock"></i> 5-6 hrs</small>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="route-card card h-100" data-animate>
+                        <img src="images/route-biratnagar-kathmandu.jpg" class="card-img-top" alt="Biratnagar to Kathmandu">
+                        <span class="route-badge badge">15% OFF</span>
+                        <div class="card-body">
+                            <h5 class="card-title">Biratnagar → Kathmandu</h5>
+                            <p class="card-text text-muted">From Rs. 1800</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="bi bi-clock"></i> 10-12 hrs</small>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <div class="route-card card h-100" data-animate>
+                        <img src="images/route-kathmandu-chitwan.jpg" class="card-img-top" alt="Kathmandu to Chitwan">
+                        <div class="card-body">
+                            <h5 class="card-title">Kathmandu → Chitwan</h5>
+                            <p class="card-text text-muted">From Rs. 1000</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted"><i class="bi bi-clock"></i> 5-6 hrs</small>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-outline-primary">View All Routes</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4" data-animate>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
+                                <i class="bi bi-bus-front fs-3"></i>
+                            </div>
+                            <h3 class="h5">Comfortable Rides</h3>
+                            <p class="text-muted">Travel in comfort with our modern fleet of buses equipped with all amenities.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 animate__animated animate__fadeIn animate__delay-1s">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle p-3 mb-3 mx-auto">
+                                <i class="bi bi-clock-history fs-3"></i>
+                            </div>
+                            <h3 class="h5">On Time Service</h3>
+                            <p class="text-muted">We pride ourselves on punctuality and reliable scheduling.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 animate__animated animate__fadeIn animate__delay-2s">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-circle p-3 mb-3 mx-auto">
+                                <i class="bi bi-shield-check fs-3"></i>
+                            </div>
+                            <h3 class="h5">Safe Travel</h3>
+                            <p class="text-muted">Your safety is our top priority with trained drivers and regular maintenance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">What Our Customers Say</h2>
+                <p class="text-muted">Hear from travelers who've experienced our service</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card card h-100 p-3">
+                        <div class="card-body">
+                            <div class="d-flex mb-3">
+                                <img src="images/testimonial-1.jpg" class="testimonial-img rounded-circle me-3" alt="Customer">
+                                <div>
+                                    <h5 class="mb-0">Ramesh Shrestha</h5>
+                                    <div class="text-warning">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-text">"The journey from Kathmandu to Pokhara was extremely comfortable. The bus was clean and the staff was very helpful."</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="testimonial-card card h-100 p-3">
+                        <div class="card-body">
+                            <div class="d-flex mb-3">
+                                <img src="images/testimonial-2.jpg" class="testimonial-img rounded-circle me-3" alt="Customer">
+                                <div>
+                                    <h5 class="mb-0">Sita Gurung</h5>
+                                    <div class="text-warning">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-half"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-text">"I travel frequently to Biratnagar and SajiloYatra has never disappointed me. Always on time and comfortable."</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="testimonial-card card h-100 p-3">
+                        <div class="card-body">
+                            <div class="d-flex mb-3">
+                                <img src="images/testimonial-3.jpg" class="testimonial-img rounded-circle me-3" alt="Customer">
+                                <div>
+                                    <h5 class="mb-0">John Smith</h5>
+                                    <div class="text-warning">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-text">"As a tourist, I found the booking process very easy and the journey was exactly as described. Will use again!"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter py-5 text-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-3">Stay Updated</h2>
+                    <p class="mb-4">Subscribe to our newsletter for special offers and travel updates</p>
+                    <form class="row g-2 justify-content-center">
+                        <div class="col-md-8">
+                            <input type="email" class="form-control form-control-lg" placeholder="Your email address">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-light btn-lg w-100">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h3 class="text-white mb-4">
+                        <i class="bi bi-bus-front me-2"></i>SajiloYatra
+                    </h3>
+                    <p class="text-white mb-4">Your trusted partner for comfortable and reliable bus travel across Nepal.</p>
+                    <div class="mt-4">
+                        <a href="#" class="social-icon me-2"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon me-2"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-icon me-2"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="text-white mb-4">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a class="footer-link" th:href="@{/index}">Home</a></li>
+                        <li class="mb-2"><a th:href="@{/about}" class="footer-link">About Us</a></li>
+                        <li class="mb-2"><a th:href="@{/faq}" class="footer-link">FAQs</a></li>
+                        <li class="mb-2"><a th:href="@{/contact}" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="text-white mb-4">Popular Routes</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Pokhara</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Pokhara to Lumbini</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Biratnagar to Kathmandu</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Chitwan</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Pokhara to Kathmandu</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="text-white mb-4">Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2 text-white"><i class="bi bi-geo-alt me-2"></i> New Baneshwor, Kathmandu</li>
+                        <li class="mb-2 text-white"><i class="bi bi-telephone me-2"></i> +977 9841000000</li>
+                        <li class="mb-2 text-white"><i class="bi bi-envelope me-2"></i> info@sajiloyatra.com</li>
+                        <li class="mb-2 text-white"><i class="bi bi-clock me-2"></i> 7AM - 7PM, Everyday</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="my-4 bg-secondary">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 text-white">&copy; 2025 SajiloYatra. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item">
+                            <a href="/privacy-policy" class="footer-link">Privacy Policy</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="/terms" class="footer-link">Terms of Service</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Flatpickr for Date Input -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize date picker
+            flatpickr("#date", {
+                minDate: "today",
+                dateFormat: "Y-m-d",
+            });
+            
+            // Hero Slider
+            const slides = document.querySelectorAll('.hero-slide');
+            let currentSlide = 0;
+            
+            function showSlide(n) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                currentSlide = (n + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+            
+            function nextSlide() {
+                showSlide(currentSlide + 1);
+            }
+            
+            // Change slide every 5 seconds
+            setInterval(nextSlide, 5000);
+            
+            // Form validation
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const departure = document.getElementById('departure').value;
+                const destination = document.getElementById('destination').value;
+                
+
+                if (!departure){
+                    e.preventDefault();
+                    alert('Please select a departure location');
+                    return;
+                }
+                if (!destination){
+                    e.preventDefault();
+                    alert('Please select a destination location');
+                    return;
+                }
+                if (!document.getElementById('date').value){
+                    e.preventDefault();
+                    alert('Please select a date');
+                    return;
+                }
+                
+                if (departure === destination) {
+                    e.preventDefault();
+                    alert('Departure and destination cannot be the same');
+                    return;
+                }
+
+                if (!departure || !destination || !document.getElementById('date').value) {
+                    e.preventDefault();
+                    alert('Please fill all fields');
+                    return;
+                }
+            });
+            
+            // Back to Top Button
+            const backToTopButton = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('active');
+                } else {
+                    backToTopButton.classList.remove('active');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+            
+            // Animate elements when they come into view
+            // Scroll animation trigger
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('[data-animate]');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if(rect.top < window.innerHeight * 0.9) {
+                    el.classList.add('animated');
+                }
+            });
+        };
+
+        // Scroll progress indicator
+        window.addEventListener('scroll', () => {
+            const progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.querySelector('.scroll-progress').style.width = `${progress}%`;
+        });
+
+        // Initial animation trigger
+        window.addEventListener('DOMContentLoaded', animateOnScroll);
+        window.addEventListener('scroll', animateOnScroll);
+        });
+    </script>
+</body>
+</html>

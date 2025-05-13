@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Buses - SajiloYatra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Animate.css for smooth animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        :root {
+            --primary-color: #42a5f5;
+            --primary-hover: #2980b9;
+            --secondary-color: #4CAF50;
+            --secondary-hover: #45a049;
+            --light-bg: #e8f5ff;
+            --dark-color: #2c3e50;
+            --animation-duration: 3s;
+            --easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Enhanced Navbar */
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white !important;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-link {
+            color: var(--dark-color) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            padding: 8px 12px !important;
+            margin: 0 5px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all var(--animation-duration) var(--easing);
+            will-change: transform, opacity;
+        }
+
+        [data-animate].animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 80px 20px;
+        }
+
+        .search-form {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .search-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+            height: 100%;
+        }
+
+        .search-button:hover {
+            background-color: #45a049;
+        }
+
+        .bus-card {
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        .bus-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .bus-header {
+            background-color: #f8f9fa;
+            padding: 15px;
+            cursor: pointer;
+        }
+
+
+
+        /* Fix for search button alignment */
+        .search-form .row {
+            align-items: flex-end;
+        }
+
+        .search-form .col-md-1 {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .search-form .col-md-1 .search-button {
+            padding: 10px;
+        }
+
+        .search-summary {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .search-summary p {
+            margin-bottom: 0;
+        }
+
+        /* Alert styling */
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .operator-name {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Expanded bus card styles */
+        .bus-card.expanded {
+            transform: scaleY(1.1);
+            transition: transform 0.3s ease, height 0.3s ease;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .bus-details {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+            transition: all 0.3s ease;
+
+        }
+
+
+        /* Seat Layout Styles */
+        .seat-rows-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .seat-row {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Increased gap between groups */
+            margin-bottom: 8px;
+        }
+
+        .seat-row.first-row .group-a {
+            justify-content: flex-start;
+            width: 40px;
+            margin-left: 10px;
+        }
+
+        .seat-row.first-row .group-b {
+
+            margin-left: 30px;
+        }
+
+        .seat-row.last-row {
+            gap: 0;
+        }
+
+        .seat-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .group-a {
+            justify-content: flex-end;
+            width: 80px; /* Adjusted width for A group */
+        }
+
+        .group-b {
+            justify-content: flex-start;
+            width: 80px; /* Adjusted width for B group */
+        }
+
+        .seat-spacer {
+            width: 40px;
+            height: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .extra-seat {
+            width: 30px;
+            height: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .last-row .seat-group.group-a {
+            justify-content: flex-end;
+            width: 80px;
+        }
+
+        .last-row .seat-group.group-b {
+            justify-content: flex-start;
+            width: 80px;
+        }
+
+        /* Last row specific styling */
+        .seat-row.last-row {
+            gap: 15px;
+        }
+
+        .seat {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            background-color: #28a745;
+            color: white;
+        }
+
+        .seat:hover:not(.booked) {
+            transform: scale(1.1);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .seat.booked {
+            background-color: #dc3545;
+            cursor: not-allowed;
+        }
+
+        .seat.selected {
+            background-color: #007bff;
+            transform: scale(1.1);
+        }
+
+        .driver-seat {
+            justify-content: center;
+            margin-left: 155px; /* Matches B group alignment */
+            margin-bottom: 15px;
+        }
+
+        .driver-seat .seat {
+            width: 60px;
+            height: 30px;
+            background-color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        /* Booking form styles */
+        .booking-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-form h5 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .seat-status {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .status-color.booked {
+            background-color: #dc3545;
+        }
+
+        .status-color.available {
+            background-color: #28a745;
+        }
+
+        .status-color.selected {
+            background-color: #007bff;
+        }
+
+        .fare-display-container {
+            min-width: 150px; /* Ensure enough space for prices */
+        }
+
+        .original-fare {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .discounted-fare {
+            display: inline-block;
+            margin-left: 8px;
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .strikethrough {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        /* Form Input Styles */
+        #fare-display,
+        #total-amount {
+            font-weight: bold;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        .total-amount {
+            font-size: 1.2rem;
+            color: #28a745;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+
+        /* Responsive adjustments */
+        /* Add these at the bottom of buses.css, after the existing media query */
+
+        @media (max-width: 768px) {
+            /* Seat layout adjustments */
+            .seat {
+                width: 30px;
+                height: 30px;
+                min-width: 30px;
+                font-size: 12px;
+                margin: 0 2px;
+                transition: all 0.3s ease;
+                transform: scale(1);
+            }
+
+            /* Container layout */
+            .seat-rows-container {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                padding: 0 10px;
+            }
+
+            /* All rows follow identical structure */
+            .seat-row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 15px; /* Consistent gap between groups */
+            }
+
+            /* First row - special only in content, not layout */
+            .seat-row.first-row {
+                /* Same as other rows */
+            }
+
+            /* Last row - extra seat treated as equal */
+            .seat-row.last-row {
+                gap: 20px; /* Slightly reduced to fit extra seat */
+            }
+
+            .seat-row.last-row .seat-spacer {
+                display: flex;
+                width: 30px;
+                justify-content: center;
+            }
+
+            .extra-seat {
+                width: 30px !important;
+                height: 25px !important;
+                margin-left: 10px;
+            }
+
+            /* Seat groups */
+            .seat-group {
+                display: flex;
+                gap: 5px;
+            }
+
+            .seat.booked {
+                transform: scale(1);
+                transition: none;
+            }
+
+            .seat.selected {
+                background-color: #007bff;
+                transform: scale(1.1);
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+                z-index: 1;
+                transition: all 0.3s ease;
+            }
+
+            /* Booking form adjustments */
+            .booking-form {
+                padding: 15px;
+                margin-top: 20px;
+            }
+
+            .booking-form h5 {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
+            }
+
+            .seat-status {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .status-item {
+                justify-content: center;
+            }
+
+            /* Form input adjustments */
+            .booking-form input,
+            .booking-form select {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            /* Last row specific mobile adjustments */
+            .seat-row.last-row {
+                justify-content: center;
+            }
+
+            .seat-row.last-row .group-a,
+            .seat-row.last-row .group-b {
+                flex: 0 0 auto;
+            }
+
+            .seat-row.last-row .extra-seat {
+                order: 1;
+                margin: 0 10px;
+            }
+
+            /* Driver seat adjustment */
+            .driver-seat {
+                display: flex;
+                justify-content: center;
+                margin-left: 120px; /* Matches B group alignment */
+                margin-bottom: 15px;
+            }
+
+            .driver-seat .seat {
+                width: 50px;
+                margin-bottom: 15px;
+                justify-content: center;
+            }
+
+
+            /* Bus card adjustments */
+            .bus-card.expanded {
+                margin: 10px 0;
+            }
+
+            .bus-details .row > div {
+                padding: 0;
+            }
+
+            .fare-display-container {
+                margin-top: 10px;
+            }
+
+            .discounted-fare {
+                display: block;
+                margin-left: 0;
+                margin-top: 4px;
+            }
+        }
+
+        /* Additional small screen adjustments */
+        @media (max-width: 480px) {
+            .seat {
+                width: 25px;
+                height: 25px;
+                font-size: 10px;
+            }
+
+            .extra-seat {
+                width: 25px;
+                height: 25px;
+            }
+
+            .booking-form {
+                padding: 10px;
+            }
+
+            .search-form {
+                padding: 15px;
+            }
+
+            .search-button {
+                padding: 8px 15px;
+            }
+        }
+
+        @keyframes seatPulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        .seat-feedback {
+            animation: seatPulse 0.3s ease;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+        }
+
+        .footer-link {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--primary-color);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .hero-slider {
+                height: 50vh;
+            }
+
+            .search-card {
+                transform: translateY(20px);
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            /* Back to Top button mobile styles */
+            .back-to-top {
+                width: 40px;
+                height: 40px;
+                bottom: 30px;
+                right: 15px;
+                font-size: 0.9rem;
+            }
+
+            /* Make it always visible on mobile */
+            .back-to-top {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        @media (prefers-reduced-motion: reduce) {
+            [data-animate] {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+    <script src="js/buses.js" ></script>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="bi bi-bus-front me-2"></i>SajiloYatra
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/index}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/faq}">FAQs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/contact}">Contact us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/about}">About us</a>
+                </li>
+                <li class="nav-item" th:if="${session.user == null}">
+                    <a class="nav-link" th:href="@{/auth}">Login</a>
+                </li>
+                <li class="nav-item dropdown" th:if="${session.user != null}">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i> Account
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" th:href="@{/my-bookings}">My Bookings</a></li>
+                        <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" th:href="@{/auth/logout}">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="scroll-progress" style="width: 0%;"></div>
+
+
+<section class="hero">
+    <div class="container">
+        <!-- Search Form -->
+        <div class="search-form">
+            <form th:action="@{/search}" method="post">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="departure" class="form-label">Departure</label>
+                        <select id="departure" name="departure" class="form-select input-field" required>
+                            <option value="" disabled>Select Departure</option>
+                            <option th:each="city : ${cities}"
+                                    th:value="${city}"
+                                    th:text="${city}"
+                                    th:selected="${city == departure}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="destination" class="form-label">Destination</label>
+                        <select id="destination" name="destination" class="form-select input-field" required>
+                            <option value="" disabled>Select Destination</option>
+                            <option th:each="city : ${cities}"
+                                    th:value="${city}"
+                                    th:text="${city}"
+                                    th:selected="${city == destination}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" id="date" name="date" class="form-control input-field"
+                               th:value="${#temporals.format(date, 'yyyy-MM-dd')}" required>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="submit" class="search-button">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${not #strings.isEmpty(departure)}" class="search-summary mb-3">
+            <h5>Search Results for:</h5>
+            <p>
+                <strong>Route:</strong> <span th:text="${departure} + ' to ' + ${destination}"></span> |
+                <strong>Date:</strong> <span th:text="${#temporals.format(date, 'MMM dd, yyyy')}"></span>
+            </p>
+        </div>
+        <h2 class="mb-4">Available Buses</h2>
+
+        <!-- Bus Cards from Database -->
+        <div th:if="${not #lists.isEmpty(buses)}">
+            <div th:each="bus : ${buses}" class="bus-card"
+            th:attr="data-booked-seats=${#strings.listJoin(bookedSeats[bus.id], ',')}">
+
+
+
+
+
+            <div class="bus-header">
+            <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <h5 th:text="${bus.busName}">Bus Name</h5>
+                            <small class="text-muted" th:text="${bus.busNumber}">Bus Number</small>
+                            <div class="operator-name" th:text="${bus.operatorName}">Operator Name</div>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="mb-1"><i class="bi bi-clock me-1"></i>
+                                <span th:text="${bus.departureTime}">Departure Time</span>
+                            </p>
+                            <p class="mb-1"><i class="bi bi-arrow-right me-1"></i>
+                                <span th:text="${bus.arrivalTime} + ' arrival'">Arrival Time</span>
+                            </p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-1"><i class="bi bi-calendar me-1"></i></i>
+                                <span th:text="${#temporals.format(date, 'MMM dd, yyyy')}">Date</span>
+                            </p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-1"><i class="bi bi-tag"></i>
+                                <!-- Show original fare (strikethrough if discounted) -->
+                                <span th:text="'Rs. ' + ${bus.fare}"
+                                      th:classappend="${adjustedFares.get(bus.id)} < ${bus.fare} ? 'strikethrough' : ''">
+        </span>
+                                <!-- Show discounted fare if applicable -->
+                                <small th:if="${adjustedFares.get(bus.id)} < ${bus.fare}"
+                                       class="text-success">
+                                    (Discounted: Rs. <span th:text="${adjustedFares.get(bus.id)}"></span>)
+                                </small>
+                            </p>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <span class="badge" th:classappend="'bg-' + ${bus.busType == 'AC'} ? 'success' :
+                                                              (${bus.busType == 'Non-AC'} ? 'primary' :
+                                                              (${bus.busType == 'Deluxe'} ? 'warning' : 'info'))"
+                                  th:text="${bus.busType}">Bus Type</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bus-details">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Seat Layout</h5>
+                            <div class="seat-layout-container">
+                                <div class="driver-seat">
+                                    <div class="seat">Driver</div>
+                                </div>
+                                <div class="seat-layout">
+                                    <!-- Seats will be generated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="booking-form">
+                                <h5>Book Your Seat</h5>
+                                <form th:action="@{/buses/book}" method="post">
+                                    <input type="hidden" name="seats" id="seats-hidden">
+                                    <input type="hidden" name="busId" th:value="${bus.id}">
+                                    <input type="hidden" name="boardingPoint" id="boardingPoint-hidden">
+                                    <input type="hidden" name="departure" th:value="${departure}">
+                                    <input type="hidden" name="destination" th:value="${destination}">
+                                    <input type="hidden" name="departureTime" th:value="${bus.departureTime}">
+                                    <input type="hidden" name="date" th:value="${#temporals.format(date, 'yyyy-MM-dd')}">
+                                    <div class="mb-3">
+                                        <label class="form-label">Boarding Point</label>
+                                        <select name="boardingPoint" class="form-control" required>
+                                            <option disabled>Select Boarding Points</option>
+                                            <option>Maharajgunj</option>
+                                            <option>Gongabu</option>
+                                            <option>Suryabinayak</option>
+                                            <option>Koteshwor</option>
+                                        </select>
+                                    </div>
+                                    <div class="seat-status mb-3">
+                                        <div class="status-item">
+                                            <div class="status-color booked"></div>
+                                            <span>Booked</span>
+                                        </div>
+                                        <div class="status-item">
+                                            <div class="status-color available"></div>
+                                            <span>Available</span>
+                                        </div>
+                                        <div class="status-item">
+                                            <div class="status-color selected"></div>
+                                            <span>Selected</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Seat(s):</label>
+                                        <input type="text" class="form-control" id="seat-numbers" readonly>
+                                    </div>
+                                    <div class="col-md-2 fare-display-container">
+                                        <p class="mb-1">
+                                            <i class="fas fa-tag"></i>
+                                            <!-- Original Fare -->
+                                            <span th:text="'Rs. ' + ${#numbers.formatDecimal(bus.fare, 1, 2)}"
+                                                  th:classappend="${adjustedFares?.get(bus.id) != null} and
+                             ${adjustedFares.get(bus.id) < bus.fare} ?
+                             'original-fare strikethrough' : 'original-fare'">
+        </span>
+                                            <span th:if="${adjustedFares?.get(bus.id) != null} and
+                     ${adjustedFares.get(bus.id) < bus.fare}"
+                                                  class="discounted-fare">
+            Rs. <span th:text="${#numbers.formatDecimal(adjustedFares.get(bus.id), 1, 2)}"></span>
+        </span>
+                                        </p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Total Amount:</label>
+                                        <input type="hidden" name="totalAmount" id="total-amount-hidden" value="0">
+                                        <input type="text" class="form-control" id="total-amount-display"  value="Rs. 0"
+                                               readonly>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Continue</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(buses)}" class="alert alert-info">
+            No buses available for your selected route and date. Please try different search criteria.
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h3 class="text-white mb-4">
+                    <i class="bi bi-bus-front me-2"></i>SajiloYatra
+                </h3>
+                <p class="text-white mb-4">Your trusted partner for comfortable and reliable bus travel across Nepal.</p>
+                <div class="mt-4">
+                    <a href="#" class="social-icon me-2"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-icon me-2"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="social-icon me-2"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4">
+                <h5 class="text-white mb-4">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a class="footer-link" th:href="@{/index}">Home</a></li>
+                    <li class="mb-2"><a th:href="@{/about}" class="footer-link">About Us</a></li>
+                    <li class="mb-2"><a th:href="@{/faq}" class="footer-link">FAQs</a></li>
+                    <li class="mb-2"><a th:href="@{/contact}" class="footer-link">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <h5 class="text-white mb-4">Popular Routes</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Pokhara</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Pokhara to Lumbini</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Biratnagar to Kathmandu</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Chitwan</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Pokhara to Kathmandu</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <h5 class="text-white mb-4">Contact Info</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2 text-white"><i class="bi bi-geo-alt me-2"></i> New Baneshwor, Kathmandu</li>
+                    <li class="mb-2 text-white"><i class="bi bi-telephone me-2"></i> +977 9841000000</li>
+                    <li class="mb-2 text-white"><i class="bi bi-envelope me-2"></i> info@sajiloyatra.com</li>
+                    <li class="mb-2 text-white"><i class="bi bi-clock me-2"></i> 7AM - 7PM, Everyday</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="my-4 bg-secondary">
+
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="mb-0 text-white">&copy; 2025 SajiloYatra. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                        <a href="/privacy-policy" class="footer-link">Privacy Policy</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="/terms" class="footer-link">Terms of Service</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to Top Button -->
+<a href="#" class="back-to-top">
+    <i class="bi bi-arrow-up"></i>
+</a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Flatpickr for Date Input -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="js/buses.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize date picker
+        flatpickr("#date", {
+            minDate: "today",
+            dateFormat: "Y-m-d",
+        });
+
+
+
+        // Form validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const departure = document.getElementById('departure').value;
+            const destination = document.getElementById('destination').value;
+
+            if (!departure || !destination) {
+                e.preventDefault();
+                alert('Please fill all fields');
+                return;
+            }
+
+            if (departure === destination) {
+                e.preventDefault();
+                alert('Departure and destination cannot be the same');
+                return;
+            }
+        });
+
+        // Back to Top Button
+        const backToTopButton = document.querySelector('.back-to-top');
+
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('active');
+            } else {
+                backToTopButton.classList.remove('active');
+            }
+        });
+
+        backToTopButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        // Animate elements when they come into view
+        // Scroll animation trigger
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('[data-animate]');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if(rect.top < window.innerHeight * 0.9) {
+                    el.classList.add('animated');
+                }
+            });
+        };
+
+        // Scroll progress indicator
+        window.addEventListener('scroll', () => {
+            const progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.querySelector('.scroll-progress').style.width = `${progress}%`;
+        });
+
+        // Initial animation trigger
+        window.addEventListener('DOMContentLoaded', animateOnScroll);
+        window.addEventListener('scroll', animateOnScroll);
+    });
+</script>
+</body>
+</html>

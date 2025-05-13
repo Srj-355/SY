@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting to eSewa</title>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.onload = function() {
+            document.forms['esewaForm'].submit();
+        };
+        /*]]>*/
+    </script>
+</head>
+<body>
+<form th:action="${esewaUrl}" method="post" name="esewaForm">
+    <input type="hidden" name="amount" th:value="${params.amount}">
+    <input type="hidden" name="tax_amount" th:value="${params.tax_amount}">
+    <input type="hidden" name="total_amount" th:value="${params.total_amount}">
+    <input type="hidden" name="transaction_uuid" th:value="${params.transaction_uuid}">
+    <input type="hidden" name="product_code" th:value="${params.product_code}">
+    <input type="hidden" name="product_service_charge" th:value="${params.product_service_charge}">
+    <input type="hidden" name="product_delivery_charge" th:value="${params.product_delivery_charge}">
+    <input type="hidden" name="success_url" th:value="${params.success_url}">
+    <input type="hidden" name="failure_url" th:value="${params.failure_url}">
+    <input type="hidden" name="signed_field_names" th:value="${params.signed_field_names}">
+    <input type="hidden" name="signature" th:value="${signature}">
+</form>
+
+<div style="text-align: center; margin-top: 50px;">
+    <h2>Redirecting to eSewa Payment Gateway...</h2>
+    <p>If you are not redirected automatically, please click the button below.</p>
+    <button onclick="document.forms['esewaForm'].submit()">Proceed to Payment</button>
+</div>
+</body>
+</html>

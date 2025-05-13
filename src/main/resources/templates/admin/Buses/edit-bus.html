@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Bus | SajiloYatra</title>
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link th:href="@{/css/admin.css}" rel="stylesheet">
+</head>
+<body class="wrapper">
+<!-- Sidebar -->
+<div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div id="content">
+    <!-- Header -->
+    <div th:replace="~{admin/fragments/header :: header}"></div>
+
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/admin/buses}">Buses</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Bus</li>
+                    </ol>
+                </nav>
+                <h2><i class="fas fa-bus me-2"></i> Edit Bus</h2>
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Edit Bus Information</h6>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/admin/buses/update/{id}(id=${bus.id})}" th:object="${bus}" method="post" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="busName" class="form-label">Bus Name</label>
+                            <input type="text" class="form-control" id="busName" th:field="*{busName}" required>
+                            <div class="invalid-feedback">Please provide a bus name.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="busNumber" class="form-label">Bus Number</label>
+                            <input type="text" class="form-control" id="busNumber" th:field="*{busNumber}" required>
+                            <div class="invalid-feedback">Please provide a bus number.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="busType" class="form-label">Bus Type</label>
+                            <select class="form-select" id="busType" th:field="*{busType}" required>
+                                <option value="">Select Type</option>
+                                <option value="AC">AC</option>
+                                <option value="Non-AC">Non-AC</option>
+                                <option value="Deluxe">Deluxe</option>
+                                <option value="Sleeper">Sleeper</option>
+                                <option value="Volvo">Volvo</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a bus type.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="operatorName" class="form-label">Operator Name</label>
+                            <input type="text" class="form-control" id="operatorName" th:field="*{operatorName}" required>
+                            <div class="invalid-feedback">Please provide an operator name.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="departureStation" class="form-label">Departure Station</label>
+                            <select id="departureStation" class="input-field" required>
+                                <option value="" disabled selected>Departure Station</option>
+                                <option value="bhojpur">Bhojpur</option>
+                                <option value="pokhara">Pokhara</option>
+                                <option value="birgunj">Birgunj</option>
+                                <option value="lumbini">Lumbini</option>
+                                <option value="dharan">Dharan</option>
+                                <option value="hetuda">Hetuda</option>
+                                <option value="butwal">Butwal</option>
+                                <option value="biratnagar">Biratnagar</option>
+                                <option value="janakpur">Janakpur</option>
+                                <option value="dhankuta">Dhankuta</option>
+                                <option value="ilam">Ilam</option>
+                                <option value="jhapa">Jhapa</option>
+                                <option value="khotang">Khotang</option>
+                                <option value="morang">Morang</option>
+                                <option value="okhaldhunga">Okhaldhunga</option>
+                                <option value="pachthar">Pachthar</option>
+                                <option value="sankhuwasabha">Sankhuwasabha</option>
+                                <option value="solukhumbu">Solukhumbu</option>
+                                <option value="sunsari">Sunsari</option>
+                                <option value="taplejung">Taplejung</option>
+                                <option value="terhathum">Terhathum</option>
+                                <option value="udayapur">Udayapur</option>
+                                <option value="parsa">Parsa</option>
+                                <option value="bara">Bara</option>
+                                <option value="rautahat">Rautahat</option>
+                                <option value="sarlahi">Sarlahi</option>
+                                <option value="siraha">Siraha</option>
+                                <option value="dhanusha">Dhanusha</option>
+                                <option value="saptari">Saptari</option>
+                                <option value="mahottari">Mahottari</option>
+                                <option value="bhaktapur">Bhaktapur</option>
+                                <option value="chitwan">Chitwan</option>
+                                <option value="dhading">Dhading</option>
+                                <option value="dolakha">Dolakha</option>
+                                <option value="kathmandu">Kathmandu</option>
+                                <option value="kavrepalanchok">Kavrepalanchok</option>
+                                <option value="lalitpur">Lalitpur</option>
+                                <option value="makwanpur">Makwanpur</option>
+                                <option value="nuwakot">Nuwakot</option>
+                                <option value="ramechap">Ramechap</option>
+                                <option value="rasuwa">Rasuwa</option>
+                                <option value="sindhuli">Sindhuli</option>
+                                <option value="sindhupalchok">Sindhupalchok</option>
+                                <option value="baglung">Baglung</option>
+                                <option value="gorkha">Gorkha</option>
+                                <option value="kaski">Kaski</option>
+                                <option value="lamjung">Lamjung</option>
+                                <option value="manang">Manang</option>
+                                <option value="mustang">Mustang</option>
+                                <option value="myagdi">Myagdi</option>
+                                <option value="nawalpur">Nawalpur</option>
+                                <option value="parwat">Parwat</option>
+                                <option value="syangja">Syangja</option>
+                                <option value="tanahun">Tanahun</option>
+                                <option value="kapilvastu">Kapilvastu</option>
+                                <option value="parasi">Parasi</option>
+                                <option value="rupandehi">Rupandehi</option>
+                                <option value="arghakhanchi">Arghakhanchi</option>
+                                <option value="gulmi">Gulmi</option>
+                                <option value="palpa">Palpa</option>
+                                <option value="dang">Dang</option>
+                                <option value="pyuthan">Pyuthan</option>
+                                <option value="rolpa">Rolpa</option>
+                                <option value="eastern_rukum">Eastern Rukum</option>
+                                <option value="banke">Banke</option>
+                                <option value="bardiya">Bardiya</option>
+                                <option value="western_rukum">Western Rukum</option>
+                                <option value="salyan">Salyan</option>
+                                <option value="dolpa">Dolpa</option>
+                                <option value="humla">Humla</option>
+                                <option value="jumla">Jumla</option>
+                                <option value="kalikot">Kalikot</option>
+                                <option value="mugu">Mugu</option>
+                                <option value="surkhet">Surkhet</option>
+                                <option value="dailekh">Dailekh</option>
+                                <option value="jajarkot">Jajarkot</option>
+                                <option value="darchula">Darchula</option>
+                                <option value="bajhang">Bajhang</option>
+                                <option value="bajura">Bajura</option>
+                                <option value="baitadi">Baitadi</option>
+                                <option value="doti">Doti</option>
+                                <option value="acham">Acham</option>
+                                <option value="dadeldhura">Dadeldhura</option>
+                                <option value="kanchanpur">Kanchanpur</option>
+                                <option value="kailali">Kailali</option>
+                                <option value="darjeling">Darjeling</option>
+                            </select>
+                            <div class="invalid-feedback">Please provide a departure station.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="arrivalStation" class="form-label">Arrival Station</label>
+                            <select id="arrivalStation" class="input-field" required>
+                                <option value="" disabled selected>Arrival Station</option>
+                                <option value="bhojpur">Bhojpur</option>
+                                <option value="pokhara">Pokhara</option>
+                                <option value="birgunj">Birgunj</option>
+                                <option value="lumbini">Lumbini</option>
+                                <option value="dharan">Dharan</option>
+                                <option value="hetuda">Hetuda</option>
+                                <option value="butwal">Butwal</option>
+                                <option value="biratnagar">Biratnagar</option>
+                                <option value="janakpur">Janakpur</option>
+                                <option value="dhankuta">Dhankuta</option>
+                                <option value="ilam">Ilam</option>
+                                <option value="jhapa">Jhapa</option>
+                                <option value="khotang">Khotang</option>
+                                <option value="morang">Morang</option>
+                                <option value="okhaldhunga">Okhaldhunga</option>
+                                <option value="pachthar">Pachthar</option>
+                                <option value="sankhuwasabha">Sankhuwasabha</option>
+                                <option value="solukhumbu">Solukhumbu</option>
+                                <option value="sunsari">Sunsari</option>
+                                <option value="taplejung">Taplejung</option>
+                                <option value="terhathum">Terhathum</option>
+                                <option value="udayapur">Udayapur</option>
+                                <option value="parsa">Parsa</option>
+                                <option value="bara">Bara</option>
+                                <option value="rautahat">Rautahat</option>
+                                <option value="sarlahi">Sarlahi</option>
+                                <option value="siraha">Siraha</option>
+                                <option value="dhanusha">Dhanusha</option>
+                                <option value="saptari">Saptari</option>
+                                <option value="mahottari">Mahottari</option>
+                                <option value="bhaktapur">Bhaktapur</option>
+                                <option value="chitwan">Chitwan</option>
+                                <option value="dhading">Dhading</option>
+                                <option value="dolakha">Dolakha</option>
+                                <option value="kathmandu">Kathmandu</option>
+                                <option value="kavrepalanchok">Kavrepalanchok</option>
+                                <option value="lalitpur">Lalitpur</option>
+                                <option value="makwanpur">Makwanpur</option>
+                                <option value="nuwakot">Nuwakot</option>
+                                <option value="ramechap">Ramechap</option>
+                                <option value="rasuwa">Rasuwa</option>
+                                <option value="sindhuli">Sindhuli</option>
+                                <option value="sindhupalchok">Sindhupalchok</option>
+                                <option value="baglung">Baglung</option>
+                                <option value="gorkha">Gorkha</option>
+                                <option value="kaski">Kaski</option>
+                                <option value="lamjung">Lamjung</option>
+                                <option value="manang">Manang</option>
+                                <option value="mustang">Mustang</option>
+                                <option value="myagdi">Myagdi</option>
+                                <option value="nawalpur">Nawalpur</option>
+                                <option value="parwat">Parwat</option>
+                                <option value="syangja">Syangja</option>
+                                <option value="tanahun">Tanahun</option>
+                                <option value="kapilvastu">Kapilvastu</option>
+                                <option value="parasi">Parasi</option>
+                                <option value="rupandehi">Rupandehi</option>
+                                <option value="arghakhanchi">Arghakhanchi</option>
+                                <option value="gulmi">Gulmi</option>
+                                <option value="palpa">Palpa</option>
+                                <option value="dang">Dang</option>
+                                <option value="pyuthan">Pyuthan</option>
+                                <option value="rolpa">Rolpa</option>
+                                <option value="eastern_rukum">Eastern Rukum</option>
+                                <option value="banke">Banke</option>
+                                <option value="bardiya">Bardiya</option>
+                                <option value="western_rukum">Western Rukum</option>
+                                <option value="salyan">Salyan</option>
+                                <option value="dolpa">Dolpa</option>
+                                <option value="humla">Humla</option>
+                                <option value="jumla">Jumla</option>
+                                <option value="kalikot">Kalikot</option>
+                                <option value="mugu">Mugu</option>
+                                <option value="surkhet">Surkhet</option>
+                                <option value="dailekh">Dailekh</option>
+                                <option value="jajarkot">Jajarkot</option>
+                                <option value="darchula">Darchula</option>
+                                <option value="bajhang">Bajhang</option>
+                                <option value="bajura">Bajura</option>
+                                <option value="baitadi">Baitadi</option>
+                                <option value="doti">Doti</option>
+                                <option value="acham">Acham</option>
+                                <option value="dadeldhura">Dadeldhura</option>
+                                <option value="kanchanpur">Kanchanpur</option>
+                                <option value="kailali">Kailali</option>
+                                <option value="darjeling">Darjeling</option>
+                            </select>
+                            <div class="invalid-feedback">Please provide an arrival station.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="departureTime" class="form-label">Departure Time</label>
+                            <input type="time" class="form-control" id="departureTime" th:field="*{departureTime}" required>
+                            <div class="invalid-feedback">Please provide a departure time.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="arrivalTime" class="form-label">Arrival Time</label>
+                            <input type="time" class="form-control" id="arrivalTime" th:field="*{arrivalTime}" required>
+                            <div class="invalid-feedback">Please provide an arrival time.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fare" class="form-label">Fare (₹)</label>
+                            <input type="number" step="0.01" class="form-control" id="fare" th:field="*{fare}" required>
+                            <div class="invalid-feedback">Please provide a valid fare.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="isActive" class="form-label">Status</label>
+                            <select class="form-select" id="isActive" th:field="*{isActive}" required>
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Update Bus
+                            </button>
+                            <a th:href="@{/admin/buses}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{admin/fragments/footer :: footer}"></div>
+</div>
+
+<!-- Footer -->
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

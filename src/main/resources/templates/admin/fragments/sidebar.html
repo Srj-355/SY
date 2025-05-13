@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!-- Sidebar Fragment -->
+<nav th:fragment="sidebar" id="sidebar">
+    <div class="sidebar-header d-flex align-items-center justify-content-between p-3">
+        <h3 class="mb-0">SajiloYatra</h3>
+        <strong class="d-none d-md-inline">SY</strong>
+    </div>
+
+    <hr class="m-0">
+
+    <ul class="list-unstyled components p-3">
+        <li>
+            <a th:href="@{/admin}" class="d-flex align-items-center">
+                <i class="fas fa-tachometer-alt me-2"></i>
+                Dashboard
+            </a>
+        </li>
+
+        <!-- Buses Management -->
+        <li class="mt-2">
+            <a href="#busesSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+               class="dropdown-toggle d-flex align-items-center">
+                <i class="fas fa-bus me-2"></i>
+                Buses Management
+            </a>
+            <ul class="collapse list-unstyled" id="busesSubmenu">
+                <li>
+                    <a th:href="@{/admin/buses}" class="d-flex align-items-center ps-4">
+                        <i class="fas fa-list me-2"></i> All Buses
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/buses/add}" class="d-flex align-items-center ps-4">
+                        <i class="fas fa-plus-circle me-2"></i> Add New Bus
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Bookings Management -->
+        <li>
+            <a href="#bookingsSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+               class="dropdown-toggle">
+                <i class="fas fa-ticket-alt me-2"></i>
+                Bookings
+            </a>
+            <ul class="collapse list-unstyled" id="bookingsSubmenu">
+                <li>
+                    <a th:href="@{/admin/bookings}" class="d-flex align-items-center ps-4">
+                        <i class="fas fa-list me-2"></i> All Bookings
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/bookings/pending}" class="d-flex align-items-center ps-4">
+                        <i class="fas fa-clock me-2"></i> Pending Bookings
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/bookings/confirmed}" class="d-flex align-items-center ps-4">
+                        <i class="fas fa-check-circle me-2"></i> Confirmed Bookings
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Users Management -->
+        <!-- Users Management -->
+        <li>
+            <a href="#usersSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+               class="dropdown-toggle d-flex align-items-center">
+                <i class="fas fa-users me-2"></i>
+                Users Management
+            </a>
+            <ul class="collapse list-unstyled" id="usersSubmenu">
+                <li>
+                    <a th:href="@{/admin/users}" class="d-flex align-items-center ps-4">
+                        <i class="fas fa-list me-2"></i> All Users
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/users/add}" class="d-flex align-items-center ps-4">
+                        <i class="fas fa-plus-circle me-2"></i> Add New User
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/users/roles}" class="d-flex align-items-center ps-4">
+                        <i class="fas fa-user-shield me-2"></i> User Roles
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Payments -->
+        <li>
+            <a href="#">
+                <i class="fas fa-money-bill-wave me-2"></i>
+                Payments
+            </a>
+        </li>
+
+        <!-- Reports -->
+        <li>
+            <a href="#reportsSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+               class="dropdown-toggle">
+                <i class="fas fa-chart-bar me-2"></i>
+                Reports
+            </a>
+            <ul class="collapse list-unstyled" id="reportsSubmenu">
+                <li><a href="#">Sales Reports</a></li>
+                <li><a href="#">Bus Occupancy</a></li>
+                <li><a href="#">User Activity</a></li>
+            </ul>
+        </li>
+
+        <!-- Settings -->
+        <li>
+            <a href="#">
+                <i class="fas fa-cog me-2"></i>
+                Settings
+            </a>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{list :: html}">
+<head>
+    <title>SajiloYatra - Confirmed Bookings</title>
+</head>
+<body>
+<!-- Override the header section -->
+<div th:fragment="content-header" class="row mb-4">
+    <div class="col-12">
+        <h2>Confirmed Bookings</h2>
+        <div class="line"></div>
+        <p class="text-muted">Successfully confirmed bookings</p>
+    </div>
+</div>
+
+<!-- Override the table body to show only confirmed bookings -->
+<tbody>
+<tr th:each="booking : ${bookings}" th:if="${booking.status == 'CONFIRMED'}">
+    <td th:text="${booking.id}">#12345</td>
+    <td>
+        <a th:href="@{/admin/users/{id}(id=${booking.user.id})}"
+           th:text="${booking.user.firstName + ' ' + booking.user.lastName}">
+            John Doe
+        </a>
+    </td>
+    <td>
+        <a th:href="@{/admin/buses/{id}(id=${booking.bus.id})}"
+           th:text="${booking.bus.busNumber}">
+            SY-101
+        </a>
+    </td>
+    <td th:text="${booking.bus.departureStation + ' to ' + booking.bus.arrivalStation}">
+        Kathmandu to Pokhara
+    </td>
+    <td th:text="${#temporals.format(booking.travelDate, 'yyyy-MM-dd')}">2023-05-15</td>
+    <td th:text="${booking.seatNumber}">A12</td>
+    <td th:text="${'Rs. ' + #numbers.formatDecimal(booking.totalFare, 1, 2)}">Rs. 1500.00</td>
+    <td>
+        <span class="badge bg-success">Confirmed</span>
+    </td>
+    <td>
+        <div class="btn-group" role="group">
+            <a th:href="@{/admin/bookings/{id}(id=${booking.id})}"
+               class="btn btn-sm btn-info">
+                <i class="fas fa-eye"></i>
+            </a>
+            <a th:href="@{/admin/bookings/{id}/ticket(id=${booking.id})}"
+               class="btn btn-sm btn-primary">
+                <i class="fas fa-ticket-alt"></i> Ticket
+            </a>
+            <button type="button" class="btn btn-sm btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#cancelModal"
+                    th:attr="data-bs-booking-id=${booking.id}">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </div>
+    </td>
+</tr>
+</tbody>
+</body>
+</html>

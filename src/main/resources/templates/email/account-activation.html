@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Activation</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Welcome to SajiloYatra!</h1>
+<p>Please click the button below to activate your account:</p>
+<a th:href="${activationUrl}" class="button">Activate Account</a>
+<p>If you didn't request this, please ignore this email.</p>
+<p>Or copy this link to your browser:</p>
+<p th:text="${activationUrl}"></p>
+</body>
+</html>

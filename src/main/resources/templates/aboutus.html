@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - SajiloYatra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        :root {
+            --primary-color: #42a5f5;
+            --primary-hover: #2980b9;
+            --secondary-color: #4CAF50;
+            --secondary-hover: #45a049;
+            --light-bg: #e8f5ff;
+            --dark-color: #2c3e50;
+            --animation-duration: 0.4s;
+            --easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white !important;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            color: var(--dark-color) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            padding: 8px 12px !important;
+            margin: 0 5px;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all var(--animation-duration) var(--easing);
+            will-change: transform, opacity;
+        }
+
+        [data-animate].animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .about-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .team-member img {
+            transition: transform 0.3s ease;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .team-member:hover img {
+            transform: scale(1.05);
+        }
+        
+        .timeline-item {
+            border-left: 3px solid var(--primary-color);
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--primary-color);
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+        }
+        
+        .footer-link {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: white;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--primary-color);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .hero-slider {
+                height: 50vh;
+            }
+            
+            .search-card {
+                transform: translateY(20px);
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            [data-animate] {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation - Same as index.html -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-bus-front me-2"></i>SajiloYatra
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/index}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/faq}">FAQs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/contact}">Contact us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/about}">About us</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.user == null}">
+                        <a class="nav-link" th:href="@{/auth}">Login</a>
+                    </li>
+                    <li class="nav-item dropdown" th:if="${session.user != null}">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i> Account
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:href="@{/my-bookings}">My Bookings</a></li>
+                            <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/auth/logout}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="scroll-progress" style="width: 0%;"></div>
+
+    <!-- About Us Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="about-card p-5 mb-5 animate__animated animate__fadeIn">
+                        <div class="text-center mb-5">
+                            <h1 class="fw-bold mb-3 animate__animated animate__fadeInDown">Our Story</h1>
+                            <p class="lead text-muted animate__animated animate__fadeIn">Redefining bus travel in Nepal since 2020</p>
+                        </div>
+                        
+                        <div class="row g-4 align-items-center">
+                            <div class="col-md-6 animate__animated animate__fadeInLeft">
+                                <div class="timeline-item">
+                                    <h4>2018 - Foundation</h4>
+                                    <p class="text-muted">Started as a small travel agency in Kathmandu Valley with a vision to transform transportation</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h4>2020 - Digital Transformation</h4>
+                                    <p class="text-muted">Launched online booking platform during pandemic to provide contactless travel solutions</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h4>2023 - Nationwide Expansion</h4>
+                                    <p class="text-muted">Expanded our network to cover all major routes across Nepal with premium services</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 animate__animated animate__fadeInRight">
+                                <img src="images/about-bus.jpg" alt="Our Bus" class="img-fluid rounded-3 shadow">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-card p-5 animate__animated animate__fadeInUp">
+                        <div class="text-center mb-5">
+                            <h2 class="fw-bold">Our Team</h2>
+                            <p class="text-muted">The passionate people behind SajiloYatra</p>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-4 text-center animate__animated animate__fadeInUp">
+                                <div class="team-member">
+                                    <img src="images/team1.jpg" class="rounded-circle mb-3 shadow" alt="CEO">
+                                    <h4>Rajesh Shrestha</h4>
+                                    <p class="text-muted">CEO & Founder</p>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="#" class="text-primary"><i class="bi bi-linkedin"></i></a>
+                                        <a href="#" class="text-primary"><i class="bi bi-twitter"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center animate__animated animate__fadeInUp animate__delay-1s">
+                                <div class="team-member">
+                                    <img src="images/team2.jpg" class="rounded-circle mb-3 shadow" alt="CTO">
+                                    <h4>Anita Gurung</h4>
+                                    <p class="text-muted">CTO</p>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="#" class="text-primary"><i class="bi bi-linkedin"></i></a>
+                                        <a href="#" class="text-primary"><i class="bi bi-twitter"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center animate__animated animate__fadeInUp animate__delay-2s">
+                                <div class="team-member">
+                                    <img src="images/team3.jpg" class="rounded-circle mb-3 shadow" alt="COO">
+                                    <h4>Bikram Thapa</h4>
+                                    <p class="text-muted">COO</p>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="#" class="text-primary"><i class="bi bi-linkedin"></i></a>
+                                        <a href="#" class="text-primary"><i class="bi bi-twitter"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-4">Our Mission</h2>
+                    <p class="lead text-muted mb-5">To make bus travel in Nepal comfortable, reliable and accessible to everyone through technology and exceptional service.</p>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-4" data-animate>
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
+                                        <i class="bi bi-people fs-3"></i>
+                                    </div>
+                                    <h3 class="h5">Customer First</h3>
+                                    <p class="text-muted">We prioritize your comfort and satisfaction above all else</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" data-animate>
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle p-3 mb-3 mx-auto">
+                                        <i class="bi bi-lightning-charge fs-3"></i>
+                                    </div>
+                                    <h3 class="h5">Innovation</h3>
+                                    <p class="text-muted">Continuously improving our services through technology</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" data-animate>
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-circle p-3 mb-3 mx-auto">
+                                        <i class="bi bi-shield-check fs-3"></i>
+                                    </div>
+                                    <h3 class="h5">Safety</h3>
+                                    <p class="text-muted">Your security is our top priority in every journey</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer - Same as index.html -->
+    <footer class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h3 class="text-white mb-4">
+                        <i class="bi bi-bus-front me-2"></i>SajiloYatra
+                    </h3>
+                    <p class="text-white mb-4">Your trusted partner for comfortable and reliable bus travel across Nepal.</p>
+                    <div class="mt-4">
+                        <a href="#" class="social-icon me-2"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon me-2"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-icon me-2"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="text-white mb-4">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a class="footer-link" th:href="@{/index}">Home</a></li>
+                        <li class="mb-2"><a th:href="@{/about}" class="footer-link">About Us</a></li>
+                        <li class="mb-2"><a th:href="@{/faq}" class="footer-link">FAQs</a></li>
+                        <li class="mb-2"><a th:href="@{/contact}" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="text-white mb-4">Popular Routes</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Pokhara</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Pokhara to Lumbini</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Biratnagar to Kathmandu</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Chitwan</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Pokhara to Kathmandu</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="text-white mb-4">Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2 text-white"><i class="bi bi-geo-alt me-2"></i> New Baneshwor, Kathmandu</li>
+                        <li class="mb-2 text-white"><i class="bi bi-telephone me-2"></i> +977 9841000000</li>
+                        <li class="mb-2 text-white"><i class="bi bi-envelope me-2"></i> info@sajiloyatra.com</li>
+                        <li class="mb-2 text-white"><i class="bi bi-clock me-2"></i> 7AM - 7PM, Everyday</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="my-4 bg-secondary">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 text-white">&copy; 2025 SajiloYatra. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item">
+                            <a href="/privacy-policy" class="footer-link">Privacy Policy</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="/terms" class="footer-link">Terms of Service</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Same JavaScript as index.html
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll progress indicator
+            window.addEventListener('scroll', () => {
+                const progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                document.querySelector('.scroll-progress').style.width = `${progress}%`;
+            });
+
+            // Back to Top Button
+            const backToTopButton = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('active');
+                } else {
+                    backToTopButton.classList.remove('active');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+
+            // Animate elements when they come into view
+            const animateOnScroll = () => {
+                const elements = document.querySelectorAll('[data-animate]');
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if(rect.top < window.innerHeight * 0.9) {
+                        el.classList.add('animated');
+                    }
+                });
+            };
+
+            // Initial animation trigger
+            window.addEventListener('DOMContentLoaded', animateOnScroll);
+            window.addEventListener('scroll', animateOnScroll);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Booking - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link th:href="@{/css/admin.css}" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+    <!-- Page Content -->
+    <div id="content">
+        <!-- Header -->
+        <div th:replace="~{admin/fragments/header :: header}"></div>
+
+        <!-- Main Content -->
+        <div class="container-fluid">
+            <div class="row mb-4">
+                <div class="col-12 d-flex justify-content-between align-items-center">
+                    <h2>Booking Details</h2>
+                    <a th:href="@{/admin/bookings}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+                <div class="line"></div>
+            </div>
+
+            <!-- Booking Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Booking #<span th:text="${booking.id}"></span></h6>
+
+    <span th:class="${booking.status == 'CONFIRMED'} ? 'badge bg-success' :
+                   (${booking.status == 'PENDING'} ? 'badge bg-warning' : 'badge bg-danger')"
+          th:text="${booking.status}">CONFIRMED</span>
+
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Customer Information</h5>
+                            <hr>
+                            <div class="mb-3">
+                                <strong>Name:</strong> <span th:text="${booking.getCustomerName()}"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Phone:</strong> <span th:text="${booking.phoneNumber}"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Email:</strong> <span th:text="${booking.user.email}"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Booking Details</h5>
+                            <hr>
+                            <div class="mb-3">
+                                <strong>Bus:</strong> <span th:text="${booking.bus.busNumber}"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Route:</strong>
+                                <span th:text="${booking.bus.departureStation} + ' to ' + ${booking.bus.arrivalStation}"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Departure:</strong>
+<!--                                <span th:text="${#temporals.format(booking.bus.departureTime, 'yyyy-MM-dd HH:mm')}"></span>-->
+                            </div>
+                            <div class="mb-3">
+                                <strong>Seats:</strong> <span th:text="${booking.seats}"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Boarding Point:</strong> <span th:text="${booking.boardingPoint}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h5>Payment Information</h5>
+                            <hr>
+                            <div class="mb-3">
+                                <strong>Amount:</strong> <span th:text="${'Rs. ' + booking.totalAmount}"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Payment Method:</strong> <span th:text="${booking.paymentMethod}"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Payment Date:</strong>
+                                <span th:text="${#temporals.format(booking.paymentDate, 'yyyy-MM-dd HH:mm')}"></span>
+                            </div>
+                            <div th:if="${booking.transactionId != null}" class="mb-3">
+                                <strong>Transaction ID:</strong> <span th:text="${booking.transactionId}"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Actions</h5>
+                            <hr>
+                            <div class="d-grid gap-2">
+                                <a th:href="@{/admin/bookings/{id}/edit(id=${booking.id})}"
+                                   class="btn btn-primary">
+                                    <i class="fas fa-edit"></i> Edit Booking
+                                </a>
+                                <button th:if="${booking.status != 'CANCELLED'}"
+                                        class="btn btn-warning"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#cancelModal"
+                                        th:attr="data-booking-id=${booking.id},
+                                                 data-booking-customer=${booking.getCustomerName()}">
+                                    <i class="fas fa-times"></i> Cancel Booking
+                                </button>
+                                <a th:href="@{/admin/bookings/{id}/resend-confirmation(id=${booking.id})}"
+                                   class="btn btn-info">
+                                    <i class="fas fa-envelope"></i> Resend Confirmation
+                                </a>
+                                <a th:href="@{/admin/bookings/{id}/delete(id=${booking.id})}"
+                                   class="btn btn-danger"
+                                   onclick="return confirm('Are you sure you want to delete this booking? This cannot be undone.');">
+                                    <i class="fas fa-trash"></i> Delete Booking
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${booking.status == 'CANCELLED'}" class="row mt-4">
+                        <div class="col-12">
+                            <h5>Cancellation Details</h5>
+                            <hr>
+                            <div class="mb-3">
+                                <strong>Reason:</strong> <span th:text="${booking.cancellationReason}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div th:replace="~{admin/fragments/footer :: footer}"></div>
+    </div>
+</div>
+
+<!-- Cancel Booking Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="cancelModalLabel">Cancel Booking</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/admin/bookings/cancel}" method="post">
+                <input type="hidden" name="bookingId" th:value="${booking.id}">
+                <div class="modal-body">
+                    <p>You are about to cancel booking for <strong th:text="${booking.getCustomerName()}"></strong>.</p>
+                    <div class="mb-3">
+                        <label for="cancellationReason" class="form-label">Reason for cancellation:</label>
+                        <textarea class="form-control" id="cancellationReason" name="cancellationReason" rows="3" required></textarea>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="sendEmail" name="sendEmail" checked>
+                        <label class="form-check-label" for="sendEmail">
+                            Send cancellation email to customer
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">Confirm Cancellation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

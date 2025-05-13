@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Bus | SajiloYatra</title>
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link th:href="@{/css/admin.css}" rel="stylesheet">
+</head>
+<body class="wrapper">
+<!-- Sidebar -->
+<div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div id="content">
+    <!-- Header -->
+    <div th:replace="~{admin/fragments/header :: header}"></div>
+
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/admin/buses}">Buses</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Add New Bus</li>
+                    </ol>
+                </nav>
+                <h2><i class="fas fa-bus me-2"></i> Add New Bus</h2>
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Bus Information</h6>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/admin/buses/save}" th:object="${bus}" method="post" class="needs-validation"
+                      novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="busName" class="form-label">Bus Name</label>
+                            <input type="text" class="form-control" id="busName" th:field="*{busName}" required>
+                            <div class="invalid-feedback">Please provide a bus name.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="busNumber" class="form-label">Bus Number</label>
+                            <input type="text" class="form-control" id="busNumber" th:field="*{busNumber}" required>
+                            <div class="invalid-feedback">Please provide a bus number.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="busType" class="form-label">Bus Type</label>
+                            <select class="form-select" id="busType" th:field="*{busType}" required>
+                                <option value="">Select Type</option>
+                                <option value="AC">AC</option>
+                                <option value="Non-AC">Non-AC</option>
+                                <option value="Deluxe">Deluxe</option>
+                                <option value="Sleeper">Sleeper</option>
+                                <option value="Volvo">Volvo</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a bus type.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="operatorName" class="form-label">Operator Name</label>
+                            <input type="text" class="form-control" id="operatorName" th:field="*{operatorName}"
+                                   required>
+                            <div class="invalid-feedback">Please provide an operator name.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="departureStation" class="form-label">Departure Station</label>
+                            <input type="text" class="form-control" id="departureStation" th:field="*{departureStation}"
+                                   required>
+                            <div class="invalid-feedback">Please provide a departure station.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="arrivalStation" class="form-label">Arrival Station</label>
+                            <input type="text" class="form-control" id="arrivalStation" th:field="*{arrivalStation}"
+                                   required>
+                            <div class="invalid-feedback">Please provide an arrival station.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="departureTime" class="form-label">Departure Time</label>
+                            <input type="time" class="form-control" id="departureTime" th:field="*{departureTime}"
+                                   required>
+                            <div class="invalid-feedback">Please provide a departure time.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="arrivalTime" class="form-label">Arrival Time</label>
+                            <input type="time" class="form-control" id="arrivalTime" th:field="*{arrivalTime}" required>
+                            <div class="invalid-feedback">Please provide an arrival time.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fare" class="form-label">Fare (₹)</label>
+                            <input type="number" step="0.01" class="form-control" id="fare" th:field="*{fare}" required>
+                            <div class="invalid-feedback">Please provide a valid fare.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="isActive" class="form-label">Status</label>
+                            <select class="form-select" id="isActive" th:field="*{isActive}" required>
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Save Bus
+                            </button>
+                            <a th:href="@{/admin/buses}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div th:replace="~{admin/fragments/footer :: footer}"></div>
+</div>
+
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - SajiloYatra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --primary-color: #42a5f5;
+            --primary-hover: #2980b9;
+            --secondary-color: #4CAF50;
+            --secondary-hover: #45a049;
+            --light-bg: #e8f5ff;
+            --dark-color: #2c3e50;
+            --animation-duration: 0.4s;
+            --easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Enhanced Navbar */
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white !important;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            color: var(--dark-color) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            padding: 8px 12px !important;
+            margin: 0 5px;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all var(--animation-duration) var(--easing);
+            will-change: transform, opacity;
+        }
+
+        [data-animate].animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .terms-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        
+        .terms-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .terms-section h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+        }
+        
+        .footer-link {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: white;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--primary-color);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .hero-slider {
+                height: 50vh;
+            }
+            
+            .search-card {
+                transform: translateY(20px);
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            [data-animate] {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation - Same as index.html -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-bus-front me-2"></i>SajiloYatra
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/index}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/faq}">FAQs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/contact}">Contact us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/about}">About us</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.user == null}">
+                        <a class="nav-link" th:href="@{/auth}">Login</a>
+                    </li>
+                    <li class="nav-item dropdown" th:if="${session.user != null}">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i> Account
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:href="@{/my-bookings}">My Bookings</a></li>
+                            <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/auth/logout}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="scroll-progress" style="width: 0%;"></div>
+
+    <!-- Terms Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="terms-card animate__animated animate__fadeIn">
+                        <div class="text-center mb-5">
+                            <h1 class="fw-bold mb-3">Terms of Service</h1>
+                            <p class="lead text-muted">Last updated: June 2023</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <p>Welcome to SajiloYatra! By accessing or using our services, you agree to comply with and be bound by the following terms and conditions of use. Please read these terms carefully.</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>1. Acceptance of Terms</h2>
+                            <p>By using SajiloYatra, you acknowledge that you have read, understood, and agree to be bound by these terms. If you do not agree with any part of these terms, you must not use our services.</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>2. Use of Services</h2>
+                            <p>You agree to use our services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, our services by any third party.</p>
+                            <p>Prohibited activities include but are not limited to:</p>
+                            <ul>
+                                <li>Attempting to interfere with the proper working of the website</li>
+                                <li>Using any automated system to access the website in a manner that sends more request messages than a human could reasonably produce</li>
+                                <li>Engaging in fraudulent activities including ticket scalping</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>3. User Accounts</h2>
+                            <p>If you create an account on SajiloYatra, you are responsible for maintaining the confidentiality of your account and password and for restricting access to your computer. You agree to accept responsibility for all activities that occur under your account or password.</p>
+                            <p>You must be at least 18 years of age to create an account and use our services. By creating an account, you represent and warrant that you are at least 18 years old.</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>4. Booking and Payments</h2>
+                            <p>All bookings are subject to availability. We reserve the right to refuse any order placed with us.</p>
+                            <p>Prices for our services are subject to change without notice. We shall not be liable to you or to any third-party for any modification, price change, suspension or discontinuance of the service.</p>
+                            <p>Payment must be completed at the time of booking. Your booking is not confirmed until payment has been received in full.</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>5. Cancellations and Refunds</h2>
+                            <p>Cancellation policies vary by bus operator. The specific cancellation terms for your booking will be displayed during the booking process.</p>
+                            <p>Refunds, when applicable, will be processed to the original payment method within 7-10 business days.</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>6. Intellectual Property</h2>
+                            <p>All content included on this site, such as text, graphics, logos, images, and software, is the property of SajiloYatra or its content suppliers and protected by international copyright laws.</p>
+                            <p>The SajiloYatra name and logo are trademarks of SajiloYatra Pvt. Ltd. You may not use these marks without our prior written permission.</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>7. Limitation of Liability</h2>
+                            <p>SajiloYatra shall not be liable for any direct, indirect, incidental, special, or consequential damages resulting from the use or the inability to use our services.</p>
+                            <p>SajiloYatra acts as an intermediary between passengers and bus operators. We are not responsible for any acts or omissions of the bus operators, including delays, cancellations, overbooking, or accidents.</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>8. Changes to Terms</h2>
+                            <p>We reserve the right to modify or replace these terms at any time. Your continued use of our services after any changes constitutes your acceptance of the new terms.</p>
+                            <p>We will notify you of significant changes to these terms by email or by posting a notice on our website.</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>9. Governing Law</h2>
+                            <p>These terms shall be governed by and construed in accordance with the laws of Nepal, without regard to its conflict of law provisions.</p>
+                            <p>Any disputes arising under or in connection with these terms shall be subject to the exclusive jurisdiction of the courts of Nepal.</p>
+                        </div>
+                        
+                        <div class="terms-section">
+                            <h2>10. Contact Us</h2>
+                            <p>If you have any questions about these terms, please contact us at:</p>
+                            <address>
+                                <strong>SajiloYatra Pvt. Ltd.</strong><br>
+                                New Baneshwor, Kathmandu<br>
+                                Nepal<br>
+                                Email: <a href="mailto:info@sajiloyatra.com">info@sajiloyatra.com</a><br>
+                                Phone: +977 9841000000
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-5">
+      <div class="container">
+          <div class="row g-4">
+              <div class="col-lg-4">
+                  <h3 class="text-white mb-4">
+                      <i class="bi bi-bus-front me-2"></i>SajiloYatra
+                  </h3>
+                  <p class="text-white mb-4">Your trusted partner for comfortable and reliable bus travel across Nepal.</p>
+                  <div class="mt-4">
+                      <a href="#" class="social-icon me-2"><i class="bi bi-facebook"></i></a>
+                      <a href="#" class="social-icon me-2"><i class="bi bi-twitter"></i></a>
+                      <a href="#" class="social-icon me-2"><i class="bi bi-instagram"></i></a>
+                      <a href="#" class="social-icon"><i class="bi bi-youtube"></i></a>
+                  </div>
+              </div>
+              
+              <div class="col-lg-2 col-md-4">
+                  <h5 class="text-white mb-4">Quick Links</h5>
+                  <ul class="list-unstyled">
+                      <li class="mb-2"><a class="footer-link" th:href="@{/index}">Home</a></li>
+                      <li class="mb-2"><a th:href="@{/about}" class="footer-link">About Us</a></li>
+                      <li class="mb-2"><a th:href="@{/faq}" class="footer-link">FAQs</a></li>
+                      <li class="mb-2"><a th:href="@{/contact}" class="footer-link">Contact</a></li>
+                  </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-4">
+                  <h5 class="text-white mb-4">Popular Routes</h5>
+                  <ul class="list-unstyled">
+                      <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Pokhara</a></li>
+                      <li class="mb-2"><a href="#" class="footer-link">Pokhara to Lumbini</a></li>
+                      <li class="mb-2"><a href="#" class="footer-link">Biratnagar to Kathmandu</a></li>
+                      <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Chitwan</a></li>
+                      <li class="mb-2"><a href="#" class="footer-link">Pokhara to Kathmandu</a></li>
+                  </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-4">
+                  <h5 class="text-white mb-4">Contact Info</h5>
+                  <ul class="list-unstyled">
+                      <li class="mb-2 text-white"><i class="bi bi-geo-alt me-2"></i> New Baneshwor, Kathmandu</li>
+                      <li class="mb-2 text-white"><i class="bi bi-telephone me-2"></i> +977 9841000000</li>
+                      <li class="mb-2 text-white"><i class="bi bi-envelope me-2"></i> info@sajiloyatra.com</li>
+                      <li class="mb-2 text-white"><i class="bi bi-clock me-2"></i> 7AM - 7PM, Everyday</li>
+                  </ul>
+              </div>
+          </div>
+          
+          <hr class="my-4 bg-secondary">
+          
+          <div class="row align-items-center">
+              <div class="col-md-6">
+                  <p class="mb-0 text-white">&copy; 2025 SajiloYatra. All rights reserved.</p>
+              </div>
+              <div class="col-md-6 text-md-end">
+                  <ul class="list-inline mb-0">
+                      <li class="list-inline-item">
+                          <a href="/privacy-policy" class="footer-link">Privacy Policy</a>
+                      </li>
+                      <li class="list-inline-item">
+                          <a href="/terms" class="footer-link">Terms of Service</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </footer>
+
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Same JavaScript as index.html
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll progress indicator
+            window.addEventListener('scroll', () => {
+                const progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                document.querySelector('.scroll-progress').style.width = `${progress}%`;
+            });
+
+            // Back to Top Button
+            const backToTopButton = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('active');
+                } else {
+                    backToTopButton.classList.remove('active');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+        });
+    </script>
+</body>
+</html>

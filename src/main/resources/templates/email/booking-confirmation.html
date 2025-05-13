@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Confirmation</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #4CAF50; color: white; padding: 10px; text-align: center; }
+    .content { padding: 20px; border: 1px solid #ddd; }
+    .footer { margin-top: 20px; font-size: 0.8em; text-align: center; color: #777; }
+    .booking-details { margin-top: 20px; }
+    .detail-row { margin-bottom: 10px; }
+    .detail-label { font-weight: bold; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Booking Confirmation</h1>
+  </div>
+
+  <div class="content">
+    <p>Dear <span th:text="${booking.getCustomerName()}"></span>,</p>
+    <p>Thank you for booking with SajiloYatra. Your payment has been successfully processed.</p>
+
+    <div class="booking-details">
+      <h3>Booking Details</h3>
+      <div class="detail-row">
+        <span class="detail-label">Booking ID:</span>
+        <span th:text="${booking.id}"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Transaction ID:</span>
+        <span th:text="${booking.transactionId}"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Bus:</span>
+        <span th:text="${booking.bus.busName} + ' (' + ${booking.bus.busNumber} + ')'"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Route:</span>
+        <span th:text="${booking.bus.departureStation} + ' to ' + ${booking.bus.arrivalStation}"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Departure Date:</span>
+        <span th:text="${booking.travelDate}"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Departure Time:</span>
+        <span th:text="${booking.bus.departureTime}"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Seats:</span>
+        <span th:text="${booking.seats}"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Total Amount:</span>
+        <span th:text="${'Rs. ' + #numbers.formatDecimal(booking.totalAmount, 1, 2)}"></span>
+      </div>
+    </div>
+
+    <p>Please arrive at the boarding point at least 30 minutes before departure.</p>
+    <p>If you have any questions, please contact our customer support.</p>
+  </div>
+
+  <div class="footer">
+    <p>© 2025 SajiloYatra. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,221 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e0f7fa, #c2e0f9, #a3c8f2); /* Consistent bluish background */
+    background-size: 200% 200%;
+    animation: gradientAnimation 15s ease infinite; /* Animated gradient background */
+    color: #333;
+    line-height: 1.6;
+}
+
+nav {
+    background-color: #42a5f5; /* Consistent nav color */
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: 600;
+    transition: transform 0.3s ease; /* Smooth hover transition */
+}
+
+.logo:hover {
+    transform: scale(1.05); /* Slight scale on hover */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin: 0 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover transition */
+}
+
+.nav-links a:hover {
+    background-color: #023e8a; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.hamburger {
+    display: none;
+    cursor: pointer;
+}
+
+.hamburger .line {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px;
+}
+.hamburger.active .line1 {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger.active .line2 {
+    opacity: 0;
+}
+
+.hamburger.active .line3 {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+.contact-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    border-radius: 8px;
+    animation: fadeIn 0.8s ease-in-out; /* Fade in animation */
+}
+
+.contact-info {
+    flex-basis: 40%;
+}
+
+.contact-form {
+    flex-basis: 55%;
+}
+
+.contact-info h1, .contact-form h2 {
+    color: #42a5f5; /* Consistent heading color */
+    margin-bottom: 20px;
+    animation: slideInLeft 0.8s ease-in-out; /* Slide in animation */
+}
+
+.contact-details {
+    margin-top: 30px;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    animation: slideInRight 0.8s ease-in-out; /* Slide in animation */
+}
+
+.detail img {
+    width: 24px;
+    margin-right: 15px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    animation: fadeInUp 0.8s ease-in-out; /* Fade up animation */
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease; /* Smooth focus transition */
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: #42a5f5; /* Highlight border on focus */
+}
+
+.form-group textarea {
+    height: 150px;
+}
+
+#contactForm button {
+    background-color: #42a5f5; /* Consistent button color */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover transition */
+}
+
+#contactForm button:hover {
+    background-color: #023e8a; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+@media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column;
+    }
+
+    .contact-info, .contact-form {
+        flex-basis: 100%;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: #42a5f5;
+        z-index: 10;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 15px 0;
+    }
+}
+
+/* Animations */
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

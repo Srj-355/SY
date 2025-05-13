@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Cancellation</title>
+  <style>
+    /* Similar styling as confirmation email */
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #e74a3b; color: white; padding: 20px; text-align: center; }
+    .content { padding: 20px; }
+    .footer { margin-top: 20px; padding: 10px; text-align: center; font-size: 0.8em; color: #777; }
+    .ticket { border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 5px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Booking Cancellation</h1>
+  </div>
+
+  <div class="content">
+    <p>Dear <span th:text="${booking.getCustomerName()}">Customer</span>,</p>
+    <p>Your booking has been cancelled. Here are the details:</p>
+
+    <div class="ticket">
+      <h3>Booking #<span th:text="${booking.id}"></span></h3>
+      <p><strong>Bus:</strong> <span th:text="${booking.bus.busName + ' (' + booking.bus.busNumber + ')'}"></span></p>
+      <p><strong>Route:</strong> <span th:text="${booking.bus.departureStation + ' to ' + booking.bus.arrivalStation}"></span></p>
+      <p><strong>Travel Date:</strong> <span th:text="${booking.travelDate}"></span></p>
+      <p><strong>Cancellation Reason:</strong> <span th:text="${booking.cancellationReason}">-</span></p>
+    </div>
+
+    <p>If you didn't request this cancellation, please contact our support team immediately.</p>
+
+    <p>We hope to serve you again in the future.</p>
+  </div>
+
+  <div class="footer">
+    <p>© 2023 SajiloYatra. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>

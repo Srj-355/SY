@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SajiloYatra - Admin Dashboard</title>
+
+  <!-- CSS Imports -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link th:href="@{/css/admin.css}" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+  <!-- Include Sidebar Fragment -->
+  <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+  <!-- Page Content -->
+  <div id="content">
+    <!-- Include Header Fragment -->
+    <div th:replace="~{admin/fragments/header :: header}"></div>
+
+    <!-- Main Content Area -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <h2>Dashboard Overview</h2>
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <div class="row mb-4">
+        <!-- Card 1: Total Bookings -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Total Bookings</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalBookings}">120</div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Total Revenue -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                    Total Revenue</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="'Rs. ' + ${#numbers.formatDecimal(totalRevenue, 1, 2)}">Rs. 250,000</div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Active Buses -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                    Active Buses</div>
+                  <div class="row no-gutters align-items-center">
+                    <div class="col-auto">
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${activeBuses}">15</div>                    </div>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-bus fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Registered Users -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                    Registered Users</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${registeredUsers}">450</div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-users fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="row">
+        <!-- Revenue Chart -->
+         <div class="col-xl-6">
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Revenue Overview</h6>
+            </div>
+            <div class="card-body">
+              <div class="chart-area">
+                <canvas id="revenueChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Occupancy Chart -->
+        <div class="col-xl-6">
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Bus Occupancy</h6>
+            </div>
+            <div class="card-body">
+              <div class="chart-area">
+                <canvas id="busOccupancyChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+    <div th:replace="~{admin/fragments/footer :: footer}"></div>
+
+  </div>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:src="@{/js/admin.js}"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+      // Revenue Chart
+      var ctx = document.getElementById('revenueChart').getContext('2d');
+      var revenueChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: /*[[${monthlyRevenue.keySet()}]]*/[],
+              datasets: [{
+                  label: 'Revenue',
+                  data: /*[[${monthlyRevenue.values()}]]*/[],
+                  backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                  borderColor: 'rgba(78, 115, 223, 1)',
+                  borderWidth: 2,
+                  pointRadius: 3,
+                  pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                  pointBorderColor: '#fff',
+                  pointHoverRadius: 5,
+                  pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
+                  pointHitRadius: 10,
+                  pointBorderWidth: 2,
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  
+      // Bus Occupancy Chart
+      var ctx2 = document.getElementById('busOccupancyChart').getContext('2d');
+      var busOccupancyChart = new Chart(ctx2, {
+          type: 'bar',
+          data: {
+              labels: /*[[${busOccupancy.keySet()}]]*/[],
+              datasets: [{
+                  label: 'Occupancy %',
+                  data: /*[[${busOccupancy.values()}]]*/[],
+                  backgroundColor: 'rgba(54, 185, 204, 0.5)',
+                  borderColor: 'rgba(54, 185, 204, 1)',
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      max: 100
+                  }
+              }
+          }
+      });
+  /*]]>*/
+  </script>
+</body>
+</html>

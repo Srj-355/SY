@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs - SajiloYatra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --primary-color: #42a5f5;
+            --primary-hover: #2980b9;
+            --secondary-color: #4CAF50;
+            --secondary-hover: #45a049;
+            --light-bg: #e8f5ff;
+            --dark-color: #2c3e50;
+            --animation-duration: 0.4s;
+            --easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white !important;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            color: var(--dark-color) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            padding: 8px 12px !important;
+            margin: 0 5px;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all var(--animation-duration) var(--easing);
+            will-change: transform, opacity;
+        }
+
+        [data-animate].animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .faq-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: none;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .faq-header {
+            background-color: white;
+            border: none;
+            padding: 1.5rem;
+            text-align: left;
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-header:not(.collapsed) {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+        }
+        
+        .faq-header:after {
+            content: '\002B';
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .faq-header.collapsed:after {
+            content: '\002B';
+        }
+        
+        .faq-header:not(.collapsed):after {
+            content: '\2212';
+        }
+
+        .faq-header.accordion-button::after {
+            margin-left: 1rem; /* Add space between text and indicator */
+            font-size: 1.2rem; /* Adjust size if needed */
+            background-image: none; /* Remove Bootstrap's default SVG */
+            content: '\002B'; /* Default '+' symbol */
+            transform: none; /* Remove Bootstrap's rotation */
+            transition: all 0.3s ease;
+            width: auto;
+            height: auto;
+        }
+
+        .faq-header.accordion-button:not(.collapsed)::after {
+            content: '\2212'; /* '-' symbol when expanded */
+        }
+        
+        .faq-body {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+        }
+        
+        .footer-link {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: white;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--primary-color);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .hero-slider {
+                height: 50vh;
+            }
+            
+            .search-card {
+                transform: translateY(20px);
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            [data-animate] {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation - Same as index.html -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-bus-front me-2"></i>SajiloYatra
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/index}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/faq}">FAQs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/contact}">Contact us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/about}">About us</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.user == null}">
+                        <a class="nav-link" th:href="@{/auth}">Login</a>
+                    </li>
+                    <li class="nav-item dropdown" th:if="${session.user != null}">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i> Account
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:href="@{/my-bookings}">My Bookings</a></li>
+                            <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/auth/logout}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="scroll-progress" style="width: 0%;"></div>
+
+    <!-- FAQ Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center">
+                    <h1 class="fw-bold mb-3 animate__animated animate__fadeInDown">Frequently Asked Questions</h1>
+                    <p class="lead text-muted animate__animated animate__fadeIn">Find answers to common questions about our services</p>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="faqAccordion">
+                        <!-- Booking Questions -->
+                        <div class="faq-card animate__animated animate__fadeIn">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="bookingHeading">
+                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bookingCollapse" aria-expanded="false" aria-controls="bookingCollapse">
+                                        Booking Questions
+                                    </button>
+                                </h2>
+                                <div id="bookingCollapse" class="accordion-collapse collapse" aria-labelledby="bookingHeading" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body p-0">
+                                        <div class="accordion" id="bookingSubAccordion">
+                                            <div class="accordion-item border-0">
+                                                <h3 class="accordion-header">
+                                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bookTicket">
+                                                        How do I book a bus ticket?
+                                                    </button>
+                                                </h3>
+                                                <div id="bookTicket" class="accordion-collapse collapse" data-bs-parent="#bookingSubAccordion">
+                                                    <div class="faq-body">
+                                                        <p>To book a bus ticket, simply enter your departure and arrival locations, select your travel date, and choose from the available buses. Follow the prompts to complete your booking. You'll receive a confirmation email with your ticket details.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="accordion-item border-0">
+                                                <h3 class="accordion-header">
+                                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paymentMethods">
+                                                        What payment methods are accepted?
+                                                    </button>
+                                                </h3>
+                                                <div id="paymentMethods" class="accordion-collapse collapse" data-bs-parent="#bookingSubAccordion">
+                                                    <div class="faq-body">
+                                                        <p>We accept various payment methods including:</p>
+                                                        <ul>
+                                                            <li>Credit/Debit Cards (Visa, MasterCard)</li>
+                                                            <li>Mobile Wallets (eSewa, Khalti)</li>
+                                                            <li>Internet Banking</li>
+                                                            <li>Cash on Board (for some operators)</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="accordion-item border-0">
+                                                <h3 class="accordion-header">
+                                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ticketConfirmation">
+                                                        How do I receive my ticket confirmation?
+                                                    </button>
+                                                </h3>
+                                                <div id="ticketConfirmation" class="accordion-collapse collapse" data-bs-parent="#bookingSubAccordion">
+                                                    <div class="faq-body">
+                                                        <p>You will receive your ticket confirmation via email and SMS immediately after completing your booking. You can also access your ticket details anytime by logging into your account on our website or mobile app.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cancellation & Changes -->
+                        <div class="faq-card animate__animated animate__fadeIn">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="cancellationHeading">
+                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cancellationCollapse" aria-expanded="false" aria-controls="cancellationCollapse">
+                                        Cancellation & Changes
+                                    </button>
+                                </h2>
+                                <div id="cancellationCollapse" class="accordion-collapse collapse" aria-labelledby="cancellationHeading" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body p-0">
+                                        <div class="accordion" id="cancellationSubAccordion">
+                                            <div class="accordion-item border-0">
+                                                <h3 class="accordion-header">
+                                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cancelTicket">
+                                                        Can I cancel or reschedule my ticket?
+                                                    </button>
+                                                </h3>
+                                                <div id="cancelTicket" class="accordion-collapse collapse" data-bs-parent="#cancellationSubAccordion">
+                                                    <div class="faq-body">
+                                                        <p>Yes, you can cancel or reschedule your ticket, subject to the bus operator's policies. Cancellation fees may apply depending on how close to the departure time you make the change. You can manage your booking through your account or by contacting our customer support.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="accordion-item border-0">
+                                                <h3 class="accordion-header">
+                                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#refundProcess">
+                                                        What is the refund process?
+                                                    </button>
+                                                </h3>
+                                                <div id="refundProcess" class="accordion-collapse collapse" data-bs-parent="#cancellationSubAccordion">
+                                                    <div class="faq-body">
+                                                        <p>Refunds are processed within 7-10 business days after cancellation. The amount refunded depends on the cancellation policy of the bus operator and the time of cancellation. Refunds are issued to the original payment method used for booking.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Travel Information -->
+                        <div class="faq-card animate__animated animate__fadeIn">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="travelHeading">
+                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#travelCollapse" aria-expanded="false" aria-controls="travelCollapse">
+                                        Travel Information
+                                    </button>
+                                </h2>
+                                <div id="travelCollapse" class="accordion-collapse collapse" aria-labelledby="travelHeading" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body p-0">
+                                        <div class="accordion" id="travelSubAccordion">
+                                            <div class="accordion-item border-0">
+                                                <h3 class="accordion-header">
+                                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#busDelay">
+                                                        What if my bus is delayed or canceled?
+                                                    </button>
+                                                </h3>
+                                                <div id="busDelay" class="accordion-collapse collapse" data-bs-parent="#travelSubAccordion">
+                                                    <div class="faq-body">
+                                                        <p>In case of bus delay or cancellation, we will notify you immediately via email and SMS. We will assist you with alternative travel arrangements on the next available bus or provide a full refund as per the operator's policy. Our customer support team is available 24/7 to help in such situations.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="accordion-item border-0">
+                                                <h3 class="accordion-header">
+                                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#luggagePolicy">
+                                                        What is the luggage policy?
+                                                    </button>
+                                                </h3>
+                                                <div id="luggagePolicy" class="accordion-collapse collapse" data-bs-parent="#travelSubAccordion">
+                                                    <div class="faq-body">
+                                                        <p>Each passenger is allowed one carry-on bag (max 5kg) and one checked luggage (max 15kg). Oversized or additional luggage may incur extra charges. Some operators may have different policies, which will be displayed during the booking process.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Account & Security -->
+                        <div class="faq-card animate__animated animate__fadeIn">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="accountHeading">
+                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accountCollapse" aria-expanded="false" aria-controls="accountCollapse">
+                                        Account & Security
+                                    </button>
+                                </h2>
+                                <div id="accountCollapse" class="accordion-collapse collapse" aria-labelledby="accountHeading" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body p-0">
+                                        <div class="accordion" id="accountSubAccordion">
+                                            <div class="accordion-item border-0">
+                                                <h3 class="accordion-header">
+                                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dataSecurity">
+                                                        Is my personal information secure?
+                                                    </button>
+                                                </h3>
+                                                <div id="dataSecurity" class="accordion-collapse collapse" data-bs-parent="#accountSubAccordion">
+                                                    <div class="faq-body">
+                                                        <p>Yes, we use industry-standard encryption and security measures to protect your data. We never store your payment details on our servers. All transactions are processed through secure payment gateways. For more details, please review our <a href="/privacy-policy">Privacy Policy</a>.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="accordion-item border-0">
+                                                <h3 class="accordion-header">
+                                                    <button class="faq-header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resetPassword">
+                                                        How do I reset my password?
+                                                    </button>
+                                                </h3>
+                                                <div id="resetPassword" class="accordion-collapse collapse" data-bs-parent="#accountSubAccordion">
+                                                    <div class="faq-body">
+                                                        <p>Click on "Forgot Password" on the login page and enter your registered email address. You'll receive a link to reset your password. If you don't see the email, please check your spam folder.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Still Have Questions Section -->
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-8 text-center">
+                    <div class="p-5 bg-white rounded-3 shadow-sm">
+                        <h2 class="mb-4">Still have questions?</h2>
+                        <p class="lead mb-4">Can't find the answer you're looking for? Our team is happy to help.</p>
+                        <a th:href="@{/contact}" class="btn btn-primary btn-lg px-4">
+                            Contact Us <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <!-- Footer -->
+   <footer class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h3 class="text-white mb-4">
+                    <i class="bi bi-bus-front me-2"></i>SajiloYatra
+                </h3>
+                <p class="text-white mb-4">Your trusted partner for comfortable and reliable bus travel across Nepal.</p>
+                <div class="mt-4">
+                    <a href="#" class="social-icon me-2"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-icon me-2"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="social-icon me-2"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4">
+                <h5 class="text-white mb-4">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a class="footer-link" th:href="@{/index}">Home</a></li>
+                    <li class="mb-2"><a th:href="@{/about}" class="footer-link">About Us</a></li>
+                    <li class="mb-2"><a th:href="@{/faq}" class="footer-link">FAQs</a></li>
+                    <li class="mb-2"><a th:href="@{/contact}" class="footer-link">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-4">
+                <h5 class="text-white mb-4">Popular Routes</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Pokhara</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Pokhara to Lumbini</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Biratnagar to Kathmandu</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Kathmandu to Chitwan</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Pokhara to Kathmandu</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-4">
+                <h5 class="text-white mb-4">Contact Info</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2 text-white"><i class="bi bi-geo-alt me-2"></i> New Baneshwor, Kathmandu</li>
+                    <li class="mb-2 text-white"><i class="bi bi-telephone me-2"></i> +977 9841000000</li>
+                    <li class="mb-2 text-white"><i class="bi bi-envelope me-2"></i> info@sajiloyatra.com</li>
+                    <li class="mb-2 text-white"><i class="bi bi-clock me-2"></i> 7AM - 7PM, Everyday</li>
+                </ul>
+            </div>
+        </div>
+        
+        <hr class="my-4 bg-secondary">
+        
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="mb-0 text-white">&copy; 2025 SajiloYatra. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                        <a href="/privacy-policy" class="footer-link">Privacy Policy</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="/terms" class="footer-link">Terms of Service</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll progress indicator
+            window.addEventListener('scroll', () => {
+                const progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                document.querySelector('.scroll-progress').style.width = `${progress}%`;
+            });
+
+            // Back to Top Button
+            const backToTopButton = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('active');
+                } else {
+                    backToTopButton.classList.remove('active');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+
+            // Animate elements when they come into view
+            const animateOnScroll = () => {
+                const elements = document.querySelectorAll('[data-animate]');
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if(rect.top < window.innerHeight * 0.9) {
+                        el.classList.add('animated');
+                    }
+                });
+            };
+
+            // Initial animation trigger
+            window.addEventListener('DOMContentLoaded', animateOnScroll);
+            window.addEventListener('scroll', animateOnScroll);
+        });
+    </script>
+</body>
+</html>

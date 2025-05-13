@@ -1,0 +1,86 @@
+/* Booking Card Styles */
+.booking-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: slideIn 0.5s ease-out;
+}
+
+.booking-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.booking-card .card-header {
+    background: #42a5f5;
+    color: white;
+    padding: 15px;
+}
+
+.booking-card .card-body {
+    padding: 20px;
+}
+
+.print-section {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.print-btn {
+    background: #42a5f5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.print-btn:hover {
+    background: #2980b9;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.print-btn {
+    margin-left: auto;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+}
+
+@media print {
+    .print-btn, nav, footer {
+        display: none;
+    }
+    
+    .booking-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Buses | SajiloYatra</title>
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link th:href="@{/css/admin.css}" rel="stylesheet">
+</head>
+
+<body class="wrapper">
+<!-- Sidebar -->
+<div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div id="content">
+    <!-- Header -->
+    <div th:replace="~{admin/fragments/header :: header}"></div>
+
+    <!-- Page Content -->
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2><i class="fas fa-bus me-2"></i>All Buses</h2>
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Bus List</h6>
+                <div class="d-flex">
+                    <form class="d-flex me-2" th:action="@{/admin/buses}" method="get">
+                        <input type="text" class="form-control me-2" name="busNumber" 
+                               placeholder="Search by bus number" th:value="${param.busNumber}">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                    <a th:href="@{/admin/buses/add}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i>Add New Bus
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Bus Name</th>
+                            <th>Bus Number</th>
+                            <th>Type</th>
+                            <th>Operator</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Fare</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="bus : ${buses}">
+                            <td th:text="${bus.id}"></td>
+                            <td th:text="${bus.busName}"></td>
+                            <td th:text="${bus.busNumber}"></td>
+                            <td th:text="${bus.busType}"></td>
+                            <td th:text="${bus.operatorName}"></td>
+                            <td>
+                                <span th:text="${bus.departureStation}"></span><br>
+                                <small class="text-muted" th:text="${bus.departureTime}"></small>
+                            </td>
+                            <td>
+                                <span th:text="${bus.arrivalStation}"></span><br>
+                                <small class="text-muted" th:text="${bus.arrivalTime}"></small>
+                            </td>
+                            <td th:text="'NPR'+ '' + ${#numbers.formatDecimal(bus.fare, 1, 2)}"></td>
+                            <td>
+                                <span th:if="${bus.isActive}" class="badge bg-success">Active</span>
+                                <span th:unless="${bus.isActive}" class="badge bg-danger">Inactive</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/buses/edit/{id}(id=${bus.id})}"
+                                   class="btn btn-primary btn-circle btn-sm" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a th:href="@{/admin/buses/delete/{id}(id=${bus.id})}"
+                                   class="btn btn-danger btn-circle btn-sm" title="Delete"
+                                   onclick="return confirm('Are you sure you want to delete this bus?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${buses.empty}">
+                            <td colspan="10" class="text-center text-muted">No buses found</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/buses(page=1, size=${size}, sort=${sort}, direction=${direction})}">First</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/buses(page=${currentPage - 1}, size=${size}, sort=${sort}, direction=${direction})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/buses(page=${i}, size=${size}, sort=${sort}, direction=${direction})}" th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/buses(page=${currentPage + 1}, size=${size}, sort=${sort}, direction=${direction})}">Next</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/buses(page=${totalPages}, size=${size}, sort=${sort}, direction=${direction})}">Last</a>
+                </li>
+            </ul>
+        </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{admin/fragments/footer :: footer}"></div>
+</div>
+
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>
