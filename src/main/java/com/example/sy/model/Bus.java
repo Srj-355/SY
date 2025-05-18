@@ -19,7 +19,7 @@ public class Bus {
     private String busNumber;
 
     @Column
-    private String busType; // AC, Non-AC, Deluxe, etc.
+    private String busType;
 
     @Column
     private String operatorName;

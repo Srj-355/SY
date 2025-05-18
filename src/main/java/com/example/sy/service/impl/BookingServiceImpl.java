@@ -58,7 +58,6 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.deleteById(id);
     }
 
-    // ... existing code ...
 @Override
 public Page<Booking> findByFirstNameAndLastNameContaining(String firstName, String lastName, Pageable pageable) {
     return bookingRepository.findByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(

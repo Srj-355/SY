@@ -145,6 +145,7 @@ public class PaymentController {
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
                 booking.setStatus("CONFIRMED");
                 bookingService.saveBooking(booking);
+                emailService.sendBookingConfirmationEmail(booking);
         model.addAttribute("booking", booking);
         return "payment/success";
     }
