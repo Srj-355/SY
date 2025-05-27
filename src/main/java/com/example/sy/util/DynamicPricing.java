@@ -36,24 +36,6 @@ public class DynamicPricing {
         this.bookedSeats = bookedSeats;
     }
 
-//    public double getFare(String dateString) {
-//        LocalDate date = LocalDate.parse(dateString, DATE_FORMATTER);
-//
-//
-//        // 1. Calculate BASE price factors (time, day, holiday)
-//        double basePrice = baseFare * calculateTimeFactor(date)
-//                * calculateDayFactor(date)
-//                * calculateHolidayFactor(dateString);
-//
-//        // 2. Apply occupancy factor SEPARATELY with stronger weighting
-//        double occupancyFactor = calculateOccupancyFactor();
-//        double dynamicPrice = basePrice * occupancyFactor;
-//
-//        // 3. Apply absolute min/max bounds
-//        return Math.max(baseFare * MIN_PRICE_FACTOR,
-//                Math.min(baseFare * MAX_PRICE_FACTOR, dynamicPrice));
-//    }
-
     public double getFare(String dateString) {
         LocalDate date = LocalDate.parse(dateString, DATE_FORMATTER);
 

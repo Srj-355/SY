@@ -704,10 +704,11 @@
                 visibility: visible;
             }
 
-        @media (prefers-reduced-motion: reduce) {
-            [data-animate] {
-                transition: none !important;
-                animation: none !important;
+            @media (prefers-reduced-motion: reduce) {
+                [data-animate] {
+                    transition: none !important;
+                    animation: none !important;
+                }
             }
         }
     </style>
@@ -878,7 +879,7 @@
                                 <form th:action="@{/buses/book}" method="post">
                                     <input type="hidden" name="seats" id="seats-hidden">
                                     <input type="hidden" name="busId" th:value="${bus.id}">
-                                    <input type="hidden" name="boardingPoint" id="boardingPoint-hidden">
+
                                     <input type="hidden" name="departure" th:value="${departure}">
                                     <input type="hidden" name="destination" th:value="${destination}">
                                     <input type="hidden" name="departureTime" th:value="${bus.departureTime}">
@@ -1051,7 +1052,7 @@
 
 
 
-        // Form validation
+    //form validation
         const form = document.querySelector('form');
         form.addEventListener('submit', function(e) {
             const departure = document.getElementById('departure').value;
@@ -1108,6 +1109,7 @@
         window.addEventListener('DOMContentLoaded', animateOnScroll);
         window.addEventListener('scroll', animateOnScroll);
     });
+        
 </script>
 </body>
 </html>
