@@ -55,48 +55,6 @@ document.querySelectorAll('.booking-form form').forEach(form => {
     });
 });
 
-// // Bus card toggle functionality
-// function toggleBusDetails(header) {
-//     const busCard = header.closest('.bus-card');
-//     const details = busCard.querySelector('.bus-details');
-
-//     if (busCard.classList.contains('expanded')) {
-//         // Collapsing the card - RESET ALL SELECTIONS
-//         busCard.classList.remove('expanded');
-//         details.style.display = 'none';
-
-//         // Clear all selections
-//         const seatNumbers = busCard.querySelector('#seat-numbers');
-//         const totalAmount = busCard.querySelector('#total-amount');
-//         const selectedSeats = busCard.querySelectorAll('.seat.selected');
-//         if (seatNumbers) seatNumbers.value = '';
-//         if (totalAmount) totalAmount.value = 'Rs. 0';
-//         selectedSeats.forEach(seat => seat.classList.remove('selected'));
-
-
-//         // If you want to also clear boarding point selection:
-//         const boardingSelect = busCard.querySelector('.booking-form select');
-//         if (boardingSelect) boardingSelect.selectedIndex = 0;
-//     } else {
-//         // Expanding the card (original behavior)
-//         document.querySelectorAll('.bus-card.expanded').forEach(card => {
-//             card.classList.remove('expanded');
-//             const cardDetails = card.querySelector('.bus-details');
-//             if (cardDetails) cardDetails.style.display = 'none';
-//         });
-
-//         busCard.classList.add('expanded');
-//         details.style.display = 'block';
-
-//         // Generate fresh seat layout
-//         const bookedSeatsStr = busCard.dataset.bookedSeats || '';
-//         const bookedSeats = bookedSeatsStr ? bookedSeatsStr.split(',') : [];
-//         console.log('Booked seats:', bookedSeats);
-//         console.log('Booked seats:', bookedSeats)
-//         const seatLayout = details.querySelector('.seat-layout');
-//         if (seatLayout) generateSeatLayout(seatLayout, bookedSeats);
-//     }
-// }
 function toggleBusDetails(header) {
     const busCard = header.closest('.bus-card');
     const details = busCard.querySelector('.bus-details');
@@ -227,13 +185,6 @@ function generateSeatLayout(container,bookedSeats=[]) {
 
     html += '</div>';
     container.innerHTML = html;
-
-    // Add click handlers to all seats
-    // container.querySelectorAll('.seat').forEach(seat => {
-    //     seat.addEventListener('click', function() {
-    //         selectSeat(this);
-    //     });
-    // });
 
     container.querySelectorAll('.seat.available').forEach(seat => {
         seat.addEventListener('click', function() {
