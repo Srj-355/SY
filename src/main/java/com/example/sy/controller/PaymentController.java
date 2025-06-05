@@ -38,8 +38,6 @@ public class PaymentController {
     @Value("${esewa.secret-key}")
     private String esewaSecretKey;
 
-    @Value("${khalti.secret-key}")
-    private String khaltiSecretKey;
 
     public PaymentController(BookingService bookingService,
                              EmailService emailService,
@@ -150,101 +148,6 @@ public class PaymentController {
         return "payment/success";
     }
 
-
-    // @GetMapping("/esewa/success")
-    // public String handleEsewaSuccess(@RequestParam String data, Model model) {
-    //     try {
-    //         Map<String, String> responseParams = parsePaymentResponse(data);
-
-    //         String transactionUuid = responseParams.get("transaction_uuid");
-    //         String status = responseParams.get("status");
-    //         String signature = responseParams.get("signature");
-
-    //         Map<String, String> verificationParams = new HashMap<>();
-    //         verificationParams.put("transaction_uuid", transactionUuid);
-    //         verificationParams.put("status", status);
-    //         verificationParams.put("signed_field_names", "transaction_uuid,status");
-
-    //         boolean isValid = paymentService.verifyEsewaSignature(
-    //                 verificationParams,
-    //                 signature,
-    //                 esewaSecretKey
-    //         );
-
-    //         if (isValid && "COMPLETE".equals(status)) {
-    //             Booking booking = bookingService.findByTransactionId(transactionUuid)
-    //                     .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
-
-    //             booking.setStatus("PAID");
-    //             booking.setPaymentDate(LocalDateTime.now());
-    //             bookingService.saveBooking(booking);
-
-    //             emailService.sendBookingConfirmationEmail(booking);
-
-    //             model.addAttribute("booking", booking);
-    //             return "payment/success";
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    //     return "redirect:/payment/failure";
-    // }
-
-    // Khalti Payment Integration
-//    @GetMapping("/khalti")
-//    public String initiateKhaltiPayment(@RequestParam Long bookingId, Model model) {
-//        Booking booking = bookingService.getBookingById(bookingId)
-//                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
-//
-//        String transactionId = "KH-" + booking.getId() + "-" + System.currentTimeMillis();
-//
-//        Map<String, String> params = new HashMap<>();
-//        params.put("public_key", khaltiSecretKey);
-//        params.put("product_identity", transactionId);
-//        params.put("product_name", "Bus Ticket");
-//        params.put("amount", String.valueOf((int)(booking.getTotalAmount() * 100))); // in paisa
-//        params.put("mobile", booking.getPhoneNumber());
-//
-//        String returnUrl = UriComponentsBuilder.fromHttpUrl(baseUrl)
-//                .path("/payment/khalti/verify")
-//                .queryParam("bookingId", bookingId)
-//                .build()
-//                .toUriString();
-//
-//        params.put("product_url", returnUrl);
-//
-//        booking.setTransactionId(transactionId);
-//        bookingService.saveBooking(booking);
-//
-//        model.addAttribute("khaltiConfig", params);
-//        return "payment/khalti-form";
-//    }
-//
-//    @PostMapping("/khalti/verify")
-//    public String verifyKhaltiPayment(@RequestParam String token,
-//                                      @RequestParam Long bookingId,
-//                                      Model model) {
-//        try {
-//            boolean verification = paymentService.verifyKhaltiPayment(token, khaltiSecretKey);
-//
-//            if (verification) {
-//                Booking booking = bookingService.getBookingById(bookingId)
-//                        .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
-//
-//                booking.setStatus("PAID");
-//                booking.setPaymentDate(LocalDateTime.now());
-//                bookingService.saveBooking(booking);
-//
-//                emailService.sendBookingConfirmationEmail(booking);
-//
-//                model.addAttribute("booking", booking);
-//                return "payment/success";
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return "redirect:/payment/failure?bookingId=" + bookingId;
-//    }
 
     // Common Failure Handler
     @GetMapping("/failure")

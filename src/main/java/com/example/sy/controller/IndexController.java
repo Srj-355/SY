@@ -12,4 +12,28 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/privacy-policy")
+    public String privacy() {
+        return "privacy.html";
+    }
+
+    @GetMapping("/terms")
+    public String terms() {
+        return "terms";
+    }
+
+    @GetMapping("/faq")
+    public String faq() {
+        return "faq";
+    }
+
+    @GetMapping("/contact")
+    public String Contact() {
+        return "contact.html";
+    }
+
+    @GetMapping("/about")
+    public String About() {
+        return "aboutus.html";
+    }
 }

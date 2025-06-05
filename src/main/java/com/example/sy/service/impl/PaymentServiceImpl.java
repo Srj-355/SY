@@ -21,9 +21,6 @@ import java.util.Map;
 public  class PaymentServiceImpl implements PaymentService {
     private final RestTemplate restTemplate;
 
-    @Value("${khalti.secret-key}")
-    private String khaltiSecretKey;
-
     @Value("${esewa.secret-key}")
     private String eSewaSecretKey;
 
