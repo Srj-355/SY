@@ -9,7 +9,7 @@ import java.util.Base64;
 /**
  * Custom password encoder with SHA-256 hashing and salt
  */
-public class SimpleEncoder {
+public class PasswordEncoder {
     private static final int SALT_LENGTH = 16;
     private static final String HASH_ALGORITHM = "SHA-256";
     private static final String DELIMITER = ":";

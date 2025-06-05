@@ -2,7 +2,7 @@ package com.example.sy.service;
 
 import com.example.sy.model.User;
 import com.example.sy.repository.UserRepository;
-import com.example.sy.util.SimpleEncoder;
+import com.example.sy.util.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -39,14 +39,14 @@ public class UserService {
 
     public User saveUser(User user) {
         if (user.getId() == null) {
-            user.setPassword(SimpleEncoder.encode(user.getPassword()));
+            user.setPassword(PasswordEncoder.encode(user.getPassword()));
             User savedUser = userRepository.save(user);
             emailService.sendAccountActivationEmail(savedUser);
             return savedUser;
         } else {
             User existingUser = userRepository.findById(user.getId()).orElse(null);
             if (existingUser != null && !user.getPassword().equals(existingUser.getPassword())) {
-                user.setPassword(SimpleEncoder.encode(user.getPassword()));
+                user.setPassword(PasswordEncoder.encode(user.getPassword()));
             }
             return userRepository.save(user);
         }
@@ -92,7 +92,7 @@ public class UserService {
         User foundUser = user.get();
 
         // Verify password
-        if (!SimpleEncoder.verify(password, foundUser.getPassword())) {
+        if (!PasswordEncoder.verify(password, foundUser.getPassword())) {
             throw new IllegalArgumentException("Invalid password");
         }
 
@@ -133,7 +133,7 @@ public class UserService {
                 });
 
         System.out.println("Resetting password for user: " + user.getUsername());
-        user.setPassword(SimpleEncoder.encode(newPassword));
+        user.setPassword(PasswordEncoder.encode(newPassword));
         user.setResetToken(null);
         user.setEnabled(true); // Activate account on password reset
         userRepository.save(user);
