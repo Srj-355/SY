@@ -8,6 +8,7 @@ if (hamburger && navLinks) {
         navLinks.classList.toggle('active');
     });
 }
+
 if (scrollToTop) {
     window.addEventListener('scroll', () => {
         if (window.pageYOffset > 300) {
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
 document.querySelectorAll('.booking-form form').forEach(form => {
     form.addEventListener('submit', function(e) {
         const button = this.querySelector('button[type="submit"]');
@@ -62,7 +64,7 @@ function toggleBusDetails(header) {
     if (busCard.classList.contains('expanded')) {
         busCard.classList.remove('expanded');
         details.style.display = 'none';
-        
+
         // Clear selections
         const seatNumbers = busCard.querySelector('#seat-numbers');
         const totalAmountDisplay = busCard.querySelector('#total-amount-display');
@@ -70,7 +72,7 @@ function toggleBusDetails(header) {
         if (seatNumbers) seatNumbers.value = '';
         if (totalAmountDisplay) totalAmountDisplay.value = 'Rs. 0';
         selectedSeats.forEach(seat => seat.classList.remove('selected'));
-        
+
         const boardingSelect = busCard.querySelector('.booking-form select');
         if (boardingSelect) boardingSelect.selectedIndex = 0;
     } else {
@@ -100,12 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
-
-
-
 // Generate seat layout
-function generateSeatLayout(container,bookedSeats=[]) {
+function generateSeatLayout(container, bookedSeats=[]) {
     // Define all seats in order
     const rows = [
         // First row (driver + front seats)
@@ -159,25 +157,25 @@ function generateSeatLayout(container,bookedSeats=[]) {
         html += `
         <div class="seat-row ${isFirstRow ? 'first-row' : ''} ${isLastRow ? 'last-row' : ''}">
             <div class="seat-group group-a">
-                ${row.groupA.map(seat => 
-                    `<div class="seat ${bookedSeats.includes(seat) ? 'booked' : 'available'}" 
+                ${row.groupA.map(seat =>
+            `<div class="seat ${bookedSeats.includes(seat) ? 'booked' : 'available'}" 
                           data-seat="${seat}">${seat}</div>`
-                ).join('')}
+        ).join('')}
             </div>
             
-            ${isLastRow ? 
-                `<div class="seat-spacer">
+            ${isLastRow ?
+            `<div class="seat-spacer">
                     <div class="seat ${bookedSeats.includes(row.extraSeat) ? 'booked' : 'available'} extra-seat" 
                          data-seat="${row.extraSeat}">${row.extraSeat}</div>
                 </div>`
-                : '<div class="seat-spacer"></div>'
-            }
+            : '<div class="seat-spacer"></div>'
+        }
             
             <div class="seat-group group-b">
-                ${row.groupB.map(seat => 
-                    `<div class="seat ${bookedSeats.includes(seat) ? 'booked' : 'available'}" 
+                ${row.groupB.map(seat =>
+            `<div class="seat ${bookedSeats.includes(seat) ? 'booked' : 'available'}" 
                           data-seat="${seat}">${seat}</div>`
-                ).join('')}
+        ).join('')}
             </div>
         </div>
     `;
@@ -188,35 +186,80 @@ function generateSeatLayout(container,bookedSeats=[]) {
 
     container.querySelectorAll('.seat.available').forEach(seat => {
         seat.addEventListener('click', function() {
-            this.classList.toggle('selected');
-            updateSelectedSeats();
+            handleSeatSelection(this);
         });
     });
 }
 
-// Select seat functionality
-function selectSeat(seatElement) {
-    if (seatElement.classList.contains('booked')) {
-        return; // Can't select booked seats
+// Handle seat selection with maximum limit
+function handleSeatSelection(seatElement) {
+    const busCard = seatElement.closest('.bus-card');
+    if (!busCard) return;
+
+    const selectedSeats = busCard.querySelectorAll('.seat.selected');
+    const isSelected = seatElement.classList.contains('selected');
+
+    // If seat is already selected, allow deselecting
+    if (isSelected) {
+        seatElement.classList.remove('selected');
+        updateSelectedSeats();
+        updateLimitFeedback(busCard);
+        return;
     }
 
-    // Toggle selected state with animation
-    seatElement.classList.toggle('selected');
+    // Check maximum seat limit
+    if (selectedSeats.length >= 5) {
+        showLimitMessage(busCard);
+        return;
+    }
 
-    // Force reflow to ensure animation restarts
-    void seatElement.offsetWidth;
-
-    // Update the selected seats display
+    // Select the seat
+    seatElement.classList.add('selected');
     updateSelectedSeats();
+    updateLimitFeedback(busCard);
 
+    // Add visual feedback
     seatElement.classList.add('seat-feedback');
     setTimeout(() => {
         seatElement.classList.remove('seat-feedback');
     }, 300);
 }
 
+// Show message when trying to exceed limit
+function showLimitMessage(busCard) {
+    const message = document.createElement('div');
+    message.className = 'limit-message';
+    message.textContent = 'Maximum 5 seats allowed per booking';
+
+    const bookingForm = busCard.querySelector('.booking-form');
+    if (bookingForm) {
+        bookingForm.prepend(message);
+        setTimeout(() => {
+            message.classList.add('fade-out');
+            setTimeout(() => message.remove(), 500);
+        }, 2000);
+    }
+}
+
+// Update visual feedback when approaching limit
+function updateLimitFeedback(busCard) {
+    const selectedSeats = busCard.querySelectorAll('.seat.selected');
+    const availableSeats = busCard.querySelectorAll('.seat.available:not(.selected)');
+
+    // Remove all limit feedback
+    availableSeats.forEach(seat => {
+        seat.classList.remove('limit-reached');
+    });
+
+    // Add feedback if at limit
+    if (selectedSeats.length >= 5) {
+        availableSeats.forEach(seat => {
+            seat.classList.add('limit-reached');
+        });
+    }
+}
+
 // Update selected seats input field
-// Update the updateSelectedSeats function to handle dynamic pricing
 function updateSelectedSeats() {
     const busCard = document.querySelector('.bus-card.expanded');
     if (!busCard) return;
