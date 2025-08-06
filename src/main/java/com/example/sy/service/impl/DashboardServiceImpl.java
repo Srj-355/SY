@@ -32,7 +32,8 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public double getTotalRevenue() {
-        return bookingRepository.sumTotalAmount();
+        Double total = bookingRepository.sumTotalAmount();
+        return total != null ? total : 0.0;
     }
 
     @Override
