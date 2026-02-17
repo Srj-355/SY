@@ -25,8 +25,6 @@ public class SessionFilter implements Filter {
             "/admin",
             "/admin/",
             "/admin/**"
-
-        
     );
 
     private static final List<String> USER_PATHS = Arrays.asList(
